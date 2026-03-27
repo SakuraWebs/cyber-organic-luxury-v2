@@ -8,7 +8,7 @@ const About = () => {
       role: "Chief Design Officer & Sales Lead",
       alias: "El Pulsar",
       description: "Responsable de la estética Ciber-Orgánica, curaduría visual y estrategias de marketing digital. Dirige la producción de contenido y la gestión de redes sociales con un enfoque en el impacto emocional, la sofisticación estética y la conversión premium.",
-      image: "https://picsum.photos/seed/florencia/800/1000",
+      image: "/src/components/florencia-perfil.webp",
       accent: "cyan",
       expertise: ["Ciber-Orgánica", "Visual Curation", "Social Media", "Content Production"]
     },
@@ -17,7 +17,7 @@ const About = () => {
       role: "CTO & Solution Architect",
       alias: "El Motor",
       description: "Especialista en arquitectura sobre Google Cloud Platform con enfoque en estándares de certificación ACE. Experto en performance extrema (Core Web Vitals), ciberseguridad e implementación de arquitecturas escalables con Python y Vertex AI.",
-      image: "https://picsum.photos/seed/enrique/800/1000",
+      image: "/src/components/enrique-perfil.webp",
       accent: "bronze",
       expertise: ["GCP Architecture", "Cybersecurity", "Vertex AI"]
     }

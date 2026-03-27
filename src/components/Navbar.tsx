@@ -75,7 +75,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-16">
+        <div className="hidden md:flex items-center space-x-6 lg:space-x-10">
           {navItems.map((item) => (
             <motion.div
               key={item.path}
