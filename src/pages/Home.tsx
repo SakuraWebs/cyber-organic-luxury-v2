@@ -30,7 +30,7 @@ export default function Home() {
       {/* Hero Section */}
       <header className="relative px-8 max-w-7xl mx-auto mb-32 py-20 overflow-hidden rounded-sm border border-white/5">
         {/* Video Background */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0" aria-hidden="true">
           <video
             autoPlay
             loop
@@ -132,6 +132,8 @@ export default function Home() {
                 }}
                 className="w-12 h-12 rounded-full bg-brand-dark/50 backdrop-blur-md border border-white/10 flex items-center justify-center text-brand-gold hover:bg-brand-gold hover:text-brand-dark transition-all duration-300"
                 title="Compartir Proyecto"
+                aria-label="Compartir Proyecto"
+                aria-expanded={showAuraShare}
               >
                 <Share2 className="w-5 h-5" />
               </motion.button>
@@ -157,6 +159,7 @@ export default function Home() {
                         }}
                         className="w-10 h-10 rounded-full bg-brand-dark/50 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-dark transition-all duration-300 transform hover:scale-110"
                         title={`Compartir en ${social.name}`}
+                        aria-label={`Compartir en ${social.name}`}
                       >
                         <social.icon className="w-4 h-4" />
                       </button>

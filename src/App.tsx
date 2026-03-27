@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Services from './pages/Services';
 import Portfolio from './pages/Portfolio';
 import Contact from './pages/Contact';
+import About from './pages/About';
 import LivingData from './pages/LivingData';
 import ProjectDetail from './pages/ProjectDetail';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -54,6 +55,7 @@ export default function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/servicios" element={<Services />} />
+                  <Route path="/nosotros" element={<About />} />
                   <Route path="/portafolio" element={<Portfolio />} />
                   <Route path="/portafolio/:projectId" element={<ProjectDetail />} />
                   <Route path="/living-data" element={<LivingData />} />

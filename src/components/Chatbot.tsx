@@ -86,6 +86,7 @@ export default function Chatbot() {
               <button 
                 onClick={() => setIsOpen(false)}
                 className="text-gray-500 hover:text-white transition-colors"
+                aria-label="Cerrar chat"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -141,11 +142,13 @@ export default function Chatbot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Escribe tu mensaje..."
+                  aria-label="Escribe tu mensaje"
                   className="flex-grow bg-brand-dark border border-white/10 rounded-sm px-4 py-2 text-xs text-white focus:outline-none focus:border-brand-cyan transition-colors"
                 />
                 <button
                   type="submit"
                   disabled={isLoading || !input.trim()}
+                  aria-label="Enviar mensaje"
                   className="w-10 h-10 rounded-sm bg-brand-cyan flex items-center justify-center text-brand-dark hover:bg-brand-gold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-4 h-4" />
@@ -161,6 +164,8 @@ export default function Chatbot() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? "Cerrar chat" : "Abrir chat"}
+        aria-expanded={isOpen}
         className={cn(
           "w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-500",
           isOpen ? "bg-white text-brand-dark rotate-90" : "bg-brand-cyan text-brand-dark"

@@ -7,6 +7,7 @@ import Logo from './Logo';
 
 const navItems = [
   { name: 'Inicio', path: '/' },
+  { name: 'Nosotros', path: '/nosotros' },
   { name: 'Servicios', path: '/servicios' },
   { name: 'Portafolio', path: '/portafolio' },
   { name: 'Living Data', path: '/living-data' },
