@@ -3,8 +3,10 @@ import { Shield, Zap, Cpu, Palette, Globe } from 'lucide-react';
 
 // 1. IMPORTAÇÃO CORRETA DAS IMAGENS
 // Como o arquivo está em src/pages, subimos um nível (..) para entrar em components
-import imgFlorencia from '../components/florencia-perfil.webp';
-import imgEnrique from '../components/enrique-perfil.webp';
+// Dentro de src/pages/About.tsx
+
+import imgFlorencia from '../components/florencia.webp';
+import imgEnrique from '../components/enrique.webp';
 
 const About = () => {
   const founders = [
