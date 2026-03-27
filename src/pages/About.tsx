@@ -1,5 +1,10 @@
 import { motion } from 'motion/react';
-import { Shield, Zap, Cpu, Palette, Globe, Award } from 'lucide-react';
+import { Shield, Zap, Cpu, Palette, Globe } from 'lucide-react';
+
+// 1. IMPORTAÇÃO CORRETA DAS IMAGENS
+// Como o arquivo está em src/pages, subimos um nível (..) para entrar em components
+import imgFlorencia from '../components/florencia-perfil.webp';
+import imgEnrique from '../components/enrique-perfil.webp';
 
 const About = () => {
   const founders = [
@@ -8,7 +13,7 @@ const About = () => {
       role: "Chief Design Officer & Sales Lead",
       alias: "El Pulsar",
       description: "Responsable de la estética Ciber-Orgánica, curaduría visual y estrategias de marketing digital. Dirige la producción de contenido y la gestión de redes sociales con un enfoque en el impacto emocional, la sofisticación estética y la conversión premium.",
-      image: "/src/components/florencia-perfil.webp",
+      image: imgFlorencia, // Usamos a variável importada
       accent: "cyan",
       expertise: ["Ciber-Orgánica", "Visual Curation", "Social Media", "Content Production"]
     },
@@ -17,7 +22,7 @@ const About = () => {
       role: "CTO & Solution Architect",
       alias: "El Motor",
       description: "Especialista en arquitectura sobre Google Cloud Platform con enfoque en estándares de certificación ACE. Experto en performance extrema (Core Web Vitals), ciberseguridad e implementación de arquitecturas escalables con Python y Vertex AI.",
-      image: "/src/components/enrique-perfil.webp",
+      image: imgEnrique, // Usamos a variável importada
       accent: "bronze",
       expertise: ["GCP Architecture", "Cybersecurity", "Vertex AI"]
     }
@@ -70,8 +75,6 @@ const About = () => {
                       src={founder.image} 
                       alt={founder.name}
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"
-                      referrerPolicy="no-referrer"
-                      loading="lazy"
                     />
                     <div className={`absolute inset-0 bg-gradient-to-t ${founder.accent === 'cyan' ? 'from-brand-cyan/40' : 'from-brand-gold/40'} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                   </div>
@@ -108,14 +111,8 @@ const About = () => {
                 {/* Bio-Pulse Glow Effect on Hover */}
                 <motion.div 
                   className={`absolute -inset-1 ${founder.accent === 'cyan' ? 'bg-brand-cyan/20' : 'bg-brand-gold/20'} blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10`}
-                  animate={{
-                    scale: [1, 1.05, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 />
               </div>
 
@@ -130,35 +127,20 @@ const About = () => {
         {/* Core Values / Expertise Section */}
         <section className="mt-48">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <motion.div 
-              whileHover={{ y: -10 }}
-              className="p-8 bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl"
-            >
+            <motion.div whileHover={{ y: -10 }} className="p-8 bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl">
               <Shield className="w-8 h-8 text-brand-cyan mb-6" />
               <h3 className="text-xl font-serif italic text-white mb-4">Seguridad Extrema</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Arquitecturas blindadas bajo estándares ACE de Google Cloud, garantizando la integridad de cada activo digital.
-              </p>
+              <p className="text-sm text-gray-400 leading-relaxed">Arquitecturas blindadas bajo estándares ACE de Google Cloud.</p>
             </motion.div>
-            <motion.div 
-              whileHover={{ y: -10 }}
-              className="p-8 bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl"
-            >
+            <motion.div whileHover={{ y: -10 }} className="p-8 bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl">
               <Zap className="w-8 h-8 text-brand-gold mb-6" />
               <h3 className="text-xl font-serif italic text-white mb-4">Performance Bio-Digital</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Optimización de Core Web Vitals para una fluidez orgánica que se siente natural y ultra-rápida.
-              </p>
+              <p className="text-sm text-gray-400 leading-relaxed">Optimización extrema para una fluidez que se siente natural.</p>
             </motion.div>
-            <motion.div 
-              whileHover={{ y: -10 }}
-              className="p-8 bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl"
-            >
+            <motion.div whileHover={{ y: -10 }} className="p-8 bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl">
               <Globe className="w-8 h-8 text-brand-cyan mb-6" />
               <h3 className="text-xl font-serif italic text-white mb-4">Escalabilidad Global</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Implementaciones con Vertex AI y Python preparadas para el crecimiento exponencial en mercados premium.
-              </p>
+              <p className="text-sm text-gray-400 leading-relaxed">Sistemas preparados para el crecimiento con Vertex AI y GCP.</p>
             </motion.div>
           </div>
         </section>
