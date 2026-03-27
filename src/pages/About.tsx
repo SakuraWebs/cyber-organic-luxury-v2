@@ -5,8 +5,8 @@ import { Shield, Zap, Cpu, Palette, Globe } from 'lucide-react';
 // Como o arquivo está em src/pages, subimos um nível (..) para entrar em components
 // Dentro de src/pages/About.tsx
 
-import imgFlorencia from '../components/florencia-perfil.webp';
-import imgEnrique from '../components/enrique-perfil.webp';
+import imgFlorencia from './components/florencia-perfil.webp';
+import imgEnrique from './components/enrique-perfil.webp';
 
 const About = () => {
   const founders = [
