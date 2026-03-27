@@ -9,22 +9,18 @@ mport imgFlorencia from '../components/florencia-perfil.webp';
 import imgEnrique from '../components/enrique-perfil.webp';
 
 const About = () => {
-  const founders = [
+ const founders = [
     {
       name: "Florencia",
-      role: "Chief Design Officer & Sales Lead",
-      alias: "El Pulsar",
-      description: "Responsable de la estética Ciber-Orgánica, curaduría visual y estrategias de marketing digital. Dirige la producción de contenido y la gestión de redes sociales con un enfoque en el impacto emocional, la sofisticación estética y la conversión premium.",
-      image: imgFlorencia, // Usamos a variável importada
+      // ... otros datos
+      image: imgFlorencia, // <-- Así, como variable
       accent: "cyan",
       expertise: ["Ciber-Orgánica", "Visual Curation", "Social Media", "Content Production"]
     },
     {
       name: "Enrique",
-      role: "CTO & Solution Architect",
-      alias: "El Motor",
-      description: "Especialista en arquitectura sobre Google Cloud Platform con enfoque en estándares de certificación ACE. Experto en performance extrema (Core Web Vitals), ciberseguridad e implementación de arquitecturas escalables con Python y Vertex AI.",
-      image: imgEnrique, // Usamos a variável importada
+      // ... otros datos
+      image: imgEnrique, // <-- Así, como variable
       accent: "bronze",
       expertise: ["GCP Architecture", "Cybersecurity", "Vertex AI"]
     }
