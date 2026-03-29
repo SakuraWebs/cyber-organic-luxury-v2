@@ -40,15 +40,27 @@ export default function Chatbot() {
     setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
     setIsLoading(true);
 
-    try {
-      const ai = new GoogleGenAI(import.meta.env.VITE_GEMINI_API_KEY);
-      const chat = ai.chats.create({
-        model: "gemini-3-flash-preview",
-        config: {
-          systemInstruction: SYSTEM_INSTRUCTION,
-        },
+   try {
+      // 1. Configuramos el modelo y las instrucciones de personalidad
+      const model = ai.getGenerativeModel({ 
+        model: "gemini-3-flash", 
+        systemInstruction: SYSTEM_INSTRUCTION 
       });
 
+      // 2. Iniciamos la sesión de chat enviando el historial acumulado
+      const chat = model.startChat({
+        history: messages.map(m => ({
+          role: m.role,
+          parts: [{ text: m.text }],
+        })),
+      });
+
+      // 3. Enviamos el mensaje actual y procesamos la respuesta
+      const result = await chat.sendMessage(userMessage);
+      const aiText = result.response.text() || "Lo siento, mi conexión se ha distraído. ¿Podrías repetir?";
+      
+      setMessages(prev => [...prev, { role: 'model', text: aiText }]);
+    } catch (error) {
       // We send the full history to keep context
       const result = await chat.sendMessage(userMessage);
       const aiText = result.response.text() || "Lo siento, he tenido un pequeño fallo en mi red neuronal. ¿Podrías repetir eso?";
