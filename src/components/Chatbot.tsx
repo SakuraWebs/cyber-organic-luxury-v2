@@ -32,17 +32,19 @@ export default function Chatbot() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async () => {
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+ const handleSend = async () => {
+    // Pegamos a chave e removemos qualquer espaço ou quebra de linha acidental
+    const rawKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const apiKey = rawKey?.trim();
 
-    // Diagnóstico detalhado no console
-    console.log("DEBUG - Verificando chave:", apiKey === "undefined" ? "Texto 'undefined' detectado" : (apiKey ? "Chave presente" : "Chave vazia"));
+    console.log("DEBUG: Verificando formato da chave:", 
+      apiKey?.startsWith("AIzaSy") ? "Formato Correto (AIzaSy)" : "FORMATO INVÁLIDO"
+    );
 
     if (!input.trim() || isLoading) return;
 
-    // Se a chave for inválida, avisamos o usuário e paramos aqui
-    if (!apiKey || apiKey === "undefined") {
-      setMessages(prev => [...prev, { role: 'model', text: "Lo siento, la configuración técnica (API Key) no se ha cargado correctamente en el servidor." }]);
+    if (!apiKey || apiKey === "undefined" || !apiKey.startsWith("AIzaSy")) {
+      setMessages(prev => [...prev, { role: 'model', text: "Erro: A chave configurada não é uma API Key válida do Gemini." }]);
       return;
     }
 
@@ -66,17 +68,16 @@ export default function Chatbot() {
       });
 
       const result = await chat.sendMessage(userMessage);
-      const aiText = result.response.text() || "Lo siento, mi conexión se ha distraído un momento.";
+      const aiText = result.response.text();
       
       setMessages(prev => [...prev, { role: 'model', text: aiText }]);
     } catch (error) {
       console.error("Chatbot Error:", error);
-      setMessages(prev => [...prev, { role: 'model', text: "Error de conexión con el núcleo digital. Por favor, revisa la consola para más detalles." }]);
+      setMessages(prev => [...prev, { role: 'model', text: "Conexión interrumpida. Verifica tu API Key en Google AI Studio." }]);
     } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="fixed bottom-8 right-8 z-50">
       <AnimatePresence>
