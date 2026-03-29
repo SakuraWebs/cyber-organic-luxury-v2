@@ -41,12 +41,26 @@ export default function Chatbot() {
     setIsLoading(true);
 
    try {
-      // 1. Configuramos el modelo y las instrucciones de personalidad
+      // 1. Instancia o modelo com as instruções do sistema
       const model = ai.getGenerativeModel({ 
-        model: "gemini-3-flash", 
+        model: "gemini-3-flash", // Recomendo usar a versão estável
         systemInstruction: SYSTEM_INSTRUCTION 
       });
 
+      // 2. Inicia a conversa passando o histórico atual
+      const chat = model.startChat({
+        history: messages.map(m => ({
+          role: m.role,
+          parts: [{ text: m.text }],
+        })),
+      });
+
+      // 3. Envia a mensagem e aguarda o resultado
+      const result = await chat.sendMessage(userMessage);
+      const aiText = result.response.text() || "Lo siento, he tenido un pequeño fallo en mi red neuronal. ¿Podrías repetir eso?";
+      
+      setMessages(prev => [...prev, { role: 'model', text: aiText }]);
+    } catch (error) {
       // 2. Iniciamos la sesión de chat enviando el historial acumulado
       const chat = model.startChat({
         history: messages.map(m => ({
