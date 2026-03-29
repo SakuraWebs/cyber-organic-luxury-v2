@@ -31,6 +31,7 @@ export default function Chatbot() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -60,20 +61,6 @@ export default function Chatbot() {
       // 4. Envia a mensagem e recupera a resposta em texto
       const result = await chat.sendMessage(userMessage);
       const aiText = result.response.text() || "Lo siento, mi conexión se ha distraído un momento.";
-      
-      setMessages(prev => [...prev, { role: 'model', text: aiText }]);
-    } catch (error) {
-      console.error("Chatbot Error:", error);
-      setMessages(prev => [...prev, { role: 'model', text: "Lo siento, mi conexión con el núcleo digital se ha interrumpido brevemente. Por favor, inténtalo de nuevo." }]);
-    } finally {
-      setIsLoading(false);
-    }
-    };
-    { role: 'model', text: aiText }]);
-    } catch (error) {
-      // We send the full history to keep context
-      const result = await chat.sendMessage(userMessage);
-      const aiText = result.response.text() || "Lo siento, he tenido un pequeño fallo en mi red neuronal. ¿Podrías repetir eso?";
       
       setMessages(prev => [...prev, { role: 'model', text: aiText }]);
     } catch (error) {
