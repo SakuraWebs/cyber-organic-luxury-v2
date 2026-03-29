@@ -50,7 +50,7 @@ export default function Chatbot() {
       });
 
       // We send the full history to keep context
-      const response = await chat.sendMessage({ message: userMessage });
+      const result = await chat.sendMessage(userMessage);
       const aiText = response.text || "Lo siento, he tenido un pequeño fallo en mi red neuronal. ¿Podrías repetir eso?";
       
       setMessages(prev => [...prev, { role: 'model', text: aiText }]);
