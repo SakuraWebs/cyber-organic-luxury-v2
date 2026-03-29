@@ -33,7 +33,11 @@ export default function Chatbot() {
   }, [messages]);
 
   const handleSend = async () => {
+    // ADICIONE ESTA LINHA PARA DIAGNÓSTICO:
+    console.log("Verificando chave:", import.meta.env.VITE_GEMINI_API_KEY ? "Chave encontrada" : "Chave AUSENTE");
+
     if (!input.trim() || isLoading) return;
+    // ... restante do código
 
     const userMessage = input.trim();
     setInput('');
