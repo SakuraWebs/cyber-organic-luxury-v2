@@ -1,23 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Phone, MapPin, Send, Check, CheckCircle, X } from 'lucide-react';
+import { Mail, Phone, Send, Check, CheckCircle, X } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { Helmet } from 'react-helmet-async';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-
-// Fix for Leaflet default icon issue in React
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
-let DefaultIcon = L.icon({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41]
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
 
 const serviceOptions = [
   'Website de Alta Performance',
@@ -120,7 +105,8 @@ export default function Contact() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('https://formsubmit.co/ajax/enrique@sakurawebs.com.br', {
+      const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || 'info@cyberorganicagency.com';
+      const response = await fetch(`https://formsubmit.co/ajax/${contactEmail}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -164,10 +150,6 @@ export default function Contact() {
 
   return (
     <div className="pt-40 pb-24 px-8 max-w-7xl mx-auto">
-      <Helmet>
-        <title>Contacto | CYBER ORGANIC AGENCY</title>
-        <meta name="description" content="¿Tienes una visión fuera de lo común? Hablemos de tu próximo proyecto digital de lujo." />
-      </Helmet>
       <header className="mb-24">
         <motion.span
           initial={{ opacity: 0 }}
@@ -197,7 +179,7 @@ export default function Contact() {
               <div>
                 <h4 className="font-sans text-[10px] tracking-widest text-brand-cyan uppercase mb-2">Email</h4>
                 <p className="font-serif text-xl text-white hover:text-brand-gold transition-colors cursor-pointer">
-                  enrique@sakurawebs.com.br
+                  info@cyberorganicagency.com
                 </p>
               </div>
             </div>
@@ -209,45 +191,8 @@ export default function Contact() {
               <div>
                 <h4 className="font-sans text-[10px] tracking-widest text-brand-cyan uppercase mb-2">Teléfono</h4>
                 <p className="font-serif text-xl text-white hover:text-brand-gold transition-colors cursor-pointer">
-                  +598 2900 1234
+                  +598 95 467 979
                 </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-6 group">
-              <div className="flex items-start gap-6">
-                <div className="w-12 h-12 bg-brand-surface rounded-full flex items-center justify-center group-hover:bg-brand-gold transition-colors duration-500">
-                  <MapPin className="w-5 h-5 text-brand-gold group-hover:text-brand-dark transition-colors" />
-                </div>
-                <div>
-                  <h4 className="font-sans text-[10px] tracking-widest text-brand-cyan uppercase mb-2">Ubicación</h4>
-                  <p className="font-serif text-xl text-white">
-                    Montevideo, Uruguay
-                  </p>
-                </div>
-              </div>
-              
-              {/* Interactive Map */}
-              <div className="h-64 w-full rounded-sm overflow-hidden border border-white/10 grayscale hover:grayscale-0 transition-all duration-700">
-                <MapContainer 
-                  center={[-34.9011, -56.1645]} 
-                  zoom={13} 
-                  scrollWheelZoom={false}
-                  style={{ height: '100%', width: '100%', background: '#101415' }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                  />
-                  <Marker position={[-34.9011, -56.1645]}>
-                    <Popup>
-                      <div className="font-sans text-xs">
-                        <strong className="text-brand-dark">CYBER ORGANIC AGENCY</strong><br />
-                        Montevideo, Uruguay
-                      </div>
-                    </Popup>
-                  </Marker>
-                </MapContainer>
               </div>
             </div>
           </div>

@@ -1,0 +1,77 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the AI Studio",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User's email address"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin", "user"],
+          "description": "Role of the user. Admins have unlimited access."
+        },
+        "dailyUsage": {
+          "type": "number",
+          "description": "Number of AI generations used today"
+        },
+        "maxDailyUsage": {
+          "type": "number",
+          "description": "Maximum number of AI generations allowed per day"
+        },
+        "lastUsageDate": {
+          "type": "string",
+          "description": "Date of the last generation in YYYY-MM-DD format"
+        }
+      },
+      "required": ["email", "role", "dailyUsage", "maxDailyUsage", "lastUsageDate"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A portfolio project",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Project title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Project description"
+        },
+        "image": {
+          "type": "string",
+          "description": "URL of the project image"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the project (e.g., Web Design, Branding)"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        }
+      },
+      "required": ["title", "description", "image", "category", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/User"
+      },
+      "description": "Stores user profiles and their daily AI generation limits"
+    },
+    "projects/{projectId}": {
+      "schema": {
+        "$ref": "#/entities/Project"
+      },
+      "description": "Stores portfolio projects"
+    }
+  }
+}

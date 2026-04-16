@@ -1,10 +1,9 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Calendar, User, CheckCircle2, ArrowRight } from 'lucide-react';
-import { projects } from '../data/projects';
 import { cn } from '@/src/lib/utils';
 
 interface ProjectModalProps {
-  project: typeof projects[0] | null;
+  project: any | null;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -48,20 +47,20 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  src={`${project.image}.webp`}
+                  src={project.image.includes('http') ? project.image : `${project.image}.webp`}
                   alt={project.alt}
                   loading="lazy"
                   decoding="async"
                   className="w-full aspect-video object-cover rounded-sm border border-white/5"
                   referrerPolicy="no-referrer"
                 />
-                {project.gallery.map((img, index) => (
+                {project.gallery.map((img: string, index: number) => (
                   <motion.img
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 + index * 0.1 }}
-                    src={`${img}.webp`}
+                    src={img.includes('http') ? img : `${img}.webp`}
                     alt={`${project.title} gallery ${index + 1}`}
                     loading="lazy"
                     decoding="async"
@@ -121,7 +120,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                 <div className="mb-12">
                   <h3 className="font-serif text-xl text-brand-gold mb-6 italic">Servicios Aplicados</h3>
                   <div className="flex flex-wrap gap-3">
-                    {project.services.map((service, index) => (
+                    {project.services.map((service: string, index: number) => (
                       <div 
                         key={index}
                         className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-sm text-xs text-white group hover:border-brand-cyan/50 transition-colors"

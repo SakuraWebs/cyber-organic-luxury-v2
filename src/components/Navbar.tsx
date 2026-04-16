@@ -4,13 +4,17 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import Logo from './Logo';
+import { auth, db } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
-const navItems = [
+const baseNavItems = [
   { name: 'Inicio', path: '/' },
   { name: 'Nosotros', path: '/nosotros' },
   { name: 'Servicios', path: '/servicios' },
   { name: 'Portafolio', path: '/portafolio' },
   { name: 'Living Data', path: '/living-data' },
+  { name: 'AI Studio', path: '/ai-studio' },
   { name: 'Contacto', path: '/contacto' },
 ];
 
@@ -31,22 +35,22 @@ const menuVariants = {
       type: 'spring' as const,
       stiffness: 400,
       damping: 40,
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
+      staggerChildren: 0.15,
+      delayChildren: 0.3,
     },
   },
 };
 
 const itemVariants = {
-  closed: { opacity: 0, x: 50, filter: 'blur(10px)' },
+  closed: { opacity: 0, x: -100, filter: 'blur(15px)' },
   open: { 
     opacity: 1, 
     x: 0, 
     filter: 'blur(0px)',
     transition: {
       type: 'spring' as const,
-      stiffness: 300,
-      damping: 24
+      stiffness: 250,
+      damping: 20
     }
   },
 };
@@ -54,6 +58,7 @@ const itemVariants = {
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -61,6 +66,27 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists() && userSnap.data().role === 'admin') {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      } else {
+        setIsAdmin(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const navItems = isAdmin 
+    ? [...baseNavItems.slice(0, 6), { name: 'Admin', path: '/admin' }, baseNavItems[6]]
+    : baseNavItems;
 
   return (
     <nav
@@ -75,7 +101,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-6 lg:space-x-10">
+        <div className="hidden md:flex items-center space-x-2 lg:space-x-4">
           {navItems.map((item) => (
             <motion.div
               key={item.path}
@@ -85,22 +111,16 @@ export default function Navbar() {
               <Link
                 to={item.path}
                 className={cn(
-                  'text-xs uppercase tracking-[0.2em] font-medium transition-colors duration-500',
+                  'px-4 py-2 rounded-full text-xs uppercase tracking-[0.2em] font-medium transition-all duration-500 border',
                   location.pathname === item.path
-                    ? 'text-brand-cyan border-b-2 border-brand-cyan pb-1'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-brand-cyan bg-brand-cyan/5 border-brand-cyan/30 shadow-[0_0_15px_rgba(0,240,255,0.1)]'
+                    : 'text-gray-400 border-transparent hover:text-white hover:bg-white/5'
                 )}
               >
                 {item.name}
               </Link>
             </motion.div>
           ))}
-          <Link
-            to="/contacto"
-            className="px-6 py-2 bg-brand-gold text-brand-dark rounded-sm text-xs uppercase tracking-widest font-bold hover:bg-white transition-colors duration-500"
-          >
-            Menu
-          </Link>
         </div>
 
         {/* Mobile Toggle */}
@@ -118,11 +138,12 @@ export default function Navbar() {
           <>
             {/* Background Overlay */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+              animate={{ opacity: 1, backdropFilter: "blur(24px)" }}
+              exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-brand-dark/60 backdrop-blur-md z-40 md:hidden"
+              className="fixed inset-0 bg-[#0B0D14]/80 z-40 md:hidden"
             />
             
             {/* Menu Content */}
@@ -177,7 +198,7 @@ export default function Navbar() {
               >
                 <div className="h-px w-full bg-white/5 mb-8" />
                 <p className="font-sans text-[10px] tracking-widest text-gray-500 uppercase mb-4">Contacto</p>
-                <p className="font-serif text-sm text-brand-gold italic">hola@cyberorganic.luxury</p>
+                <p className="font-serif text-sm text-brand-gold italic">info@cyberorganicagency.com</p>
               </motion.div>
             </motion.div>
           </>

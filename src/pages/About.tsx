@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Shield, Zap, Cpu, Palette, Globe, Award } from 'lucide-react';
+import { Shield, Zap, Cpu, Palette, Globe, Instagram, Facebook, Github, Linkedin } from 'lucide-react';
 
 const About = () => {
   const founders = [
@@ -8,18 +8,26 @@ const About = () => {
       role: "Chief Design Officer & Sales Lead",
       alias: "El Pulsar",
       description: "Responsable de la estética Ciber-Orgánica, curaduría visual y estrategias de marketing digital. Dirige la producción de contenido y la gestión de redes sociales con un enfoque en el impacto emocional, la sofisticación estética y la conversión premium.",
-      image: "/florencia-perfil.webp",
+      image: "/florencia-perfil.webp?v=1",
       accent: "cyan",
-      expertise: ["Ciber-Orgánica", "Visual Curation", "Social Media", "Content Production"]
+      expertise: ["Ciber-Orgánica", "Visual Curation", "Social Media", "Content Production"],
+      socials: [
+        { icon: Instagram, url: "https://instagram.com/florci_garcia_", label: "Instagram" },
+        { icon: Facebook, url: "#", label: "Facebook" }
+      ]
     },
     {
       name: "Enrique",
       role: "CTO & Solution Architect",
       alias: "El Motor",
       description: "Especialista en arquitectura sobre Google Cloud Platform con enfoque en estándares de certificación ACE. Experto en performance extrema (Core Web Vitals), ciberseguridad e implementación de arquitecturas escalables con Python y Vertex AI.",
-      image: "/enrique-perfil.webp",
+      image: "/enrique-perfil.webp?v=1",
       accent: "bronze",
-      expertise: ["GCP Architecture", "Cybersecurity", "Vertex AI"]
+      expertise: ["GCP Architecture", "Cybersecurity", "Vertex AI"],
+      socials: [
+        { icon: Github, url: "https://github.com/SakuraWebs", label: "GitHub" },
+        { icon: Linkedin, url: "https://www.linkedin.com/in/enrique-fernández-3275463a6", label: "LinkedIn" }
+      ]
     }
   ];
 
@@ -65,13 +73,12 @@ const About = () => {
               <div className="relative z-10 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 group-hover:border-white/20 group-hover:bg-white/10">
                 <div className="flex flex-col md:flex-row">
                   {/* Image Container */}
-                  <div className="md:w-1/2 relative overflow-hidden aspect-[4/5]">
+                  <div className="md:w-1/2 relative overflow-hidden aspect-[4/5] bg-brand-surface">
                     <img 
                       src={founder.image} 
                       alt={founder.name}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"
+                      className="w-full h-full object-cover transition-all duration-700"
                       referrerPolicy="no-referrer"
-                      loading="lazy"
                     />
                     <div className={`absolute inset-0 bg-gradient-to-t ${founder.accent === 'cyan' ? 'from-brand-cyan/40' : 'from-brand-gold/40'} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                   </div>
@@ -90,6 +97,29 @@ const About = () => {
                       <p className="text-sm text-gray-400 leading-relaxed mb-8 font-sans">
                         {founder.description}
                       </p>
+                      
+                      {/* Social Links */}
+                      <div className="flex gap-4 mb-8">
+                        {founder.socials.map((social) => (
+                          <motion.a
+                            key={social.label}
+                            href={social.url}
+                            target={social.url !== "#" ? "_blank" : undefined}
+                            rel={social.url !== "#" ? "noopener noreferrer" : undefined}
+                            whileHover={{ y: -4, scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`p-3 rounded-full bg-white/5 border border-white/10 flex items-center justify-center ${
+                              founder.accent === 'cyan' 
+                                ? 'hover:text-brand-cyan hover:border-brand-cyan/50 hover:bg-brand-cyan/10 hover:shadow-[0_0_15px_rgba(0,240,255,0.3)]' 
+                                : 'hover:text-brand-gold hover:border-brand-gold/50 hover:bg-brand-gold/10 hover:shadow-[0_0_15px_rgba(212,175,55,0.3)]'
+                            } text-gray-400 transition-all duration-300`}
+                            aria-label={social.label}
+                            title={social.url === "#" ? "Próximamente" : social.label}
+                          >
+                            <social.icon className="w-5 h-5" />
+                          </motion.a>
+                        ))}
+                      </div>
                     </div>
 
                     <div className="space-y-4">

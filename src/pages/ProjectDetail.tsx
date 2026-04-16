@@ -1,20 +1,59 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { projects } from '../data/projects';
+import { projects as localProjects } from '../data/projects';
 import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Calendar, User, Briefcase, ExternalLink, ChevronRight } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { db } from '../firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function ProjectDetail() {
   const { projectId } = useParams();
   const navigate = useNavigate();
-  const project = projects.find(p => p.id === Number(projectId));
+  const [project, setProject] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!project) {
-      navigate('/portafolio');
-    }
-  }, [project, navigate]);
+    const fetchProject = async () => {
+      if (!projectId) return;
+      
+      // Check local projects first
+      const localProject = localProjects.find(p => String(p.id) === String(projectId));
+      
+      if (localProject) {
+        setProject(localProject);
+        setLoading(false);
+        return;
+      }
+
+      // If not local, try fetching from Firestore
+      try {
+        const docRef = doc(db, 'projects', projectId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setProject({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          navigate('/portafolio');
+        }
+      } catch (error) {
+        console.error("Error fetching project:", error);
+        navigate('/portafolio');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProject();
+  }, [projectId, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-brand-dark pt-32 pb-24 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-brand-gold/20 border-t-brand-gold rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   if (!project) return null;
 
@@ -31,7 +70,7 @@ export default function ProjectDetail() {
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.6 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
-          src={project.image}
+          src={project.image.includes('http') ? project.image : `${project.image}.webp`}
           alt={project.alt}
           className="w-full h-full object-cover grayscale"
           referrerPolicy="no-referrer"
@@ -98,7 +137,7 @@ export default function ProjectDetail() {
                     <span className="font-sans text-[10px] uppercase tracking-widest font-bold">Servicios</span>
                   </div>
                   <ul className="space-y-2">
-                    {project.services.map((service, index) => (
+                    {project.services.map((service: string, index: number) => (
                       <li key={index} className="flex items-center gap-3 text-gray-400 font-sans text-xs">
                         <ChevronRight className="w-3 h-3 text-brand-gold" />
                         {service}
@@ -111,6 +150,7 @@ export default function ProjectDetail() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={() => window.open(project.link, '_blank')}
                 className="w-full py-5 bg-brand-gold text-brand-dark font-sans text-xs uppercase tracking-widest font-bold hover:bg-white transition-all duration-300 flex items-center justify-center gap-3"
               >
                 Visitar Sitio <ExternalLink className="w-4 h-4" />
@@ -134,7 +174,7 @@ export default function ProjectDetail() {
               </div>
 
               <div className="space-y-12">
-                {project.gallery.map((img, index) => (
+                {project.gallery.map((img: string, index: number) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 30 }}
@@ -143,7 +183,7 @@ export default function ProjectDetail() {
                     className="relative aspect-video overflow-hidden rounded-sm group"
                   >
                     <img
-                      src={img}
+                      src={img.includes('http') ? img : `${img}.webp`}
                       alt={`${project.title} gallery ${index + 1}`}
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
                       referrerPolicy="no-referrer"
@@ -164,7 +204,13 @@ export default function ProjectDetail() {
             Siguiente Proyecto
           </span>
           {(() => {
-            const nextProject = projects[(projects.indexOf(project) + 1) % projects.length];
+            // Find the index of the current project in local projects
+            // If it's a firestore project, just show the first local project as next
+            const currentIndex = localProjects.findIndex(p => p.id === project.id);
+            const nextProject = currentIndex !== -1 
+              ? localProjects[(currentIndex + 1) % localProjects.length]
+              : localProjects[0];
+              
             return (
               <Link to={`/portafolio/${nextProject.id}`} className="group inline-block">
                 <h3 className="font-serif text-5xl md:text-8xl text-white group-hover:text-brand-gold transition-colors duration-500 mb-8">

@@ -23,10 +23,6 @@ export default function Home() {
 
   return (
     <div className="pt-32 pb-24">
-      <Helmet>
-        <title>CYBER ORGANIC AGENCY | Lujo Digital y Diseño Bio-Digital</title>
-        <meta name="description" content="Agencia creativa de lujo que fusiona la precisión algorítmica con la imperfección orgánica. Especialistas en diseño web y marketing digital." />
-      </Helmet>
       {/* Hero Section */}
       <header className="relative px-8 max-w-7xl mx-auto mb-32 py-20 overflow-hidden rounded-sm border border-white/5">
         {/* Video Background */}

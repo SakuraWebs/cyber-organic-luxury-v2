@@ -30,10 +30,6 @@ const services = [
 export default function Services() {
   return (
     <div className="pt-40 pb-24 px-8 max-w-7xl mx-auto">
-      <Helmet>
-        <title>Servicios | CYBER ORGANIC AGENCY</title>
-        <meta name="description" content="Descubre nuestros servicios de diseño web de alta performance, producción de contenido cinematográfico y marketing digital estratégico." />
-      </Helmet>
       <header className="mb-32">
         <motion.span
           initial={{ opacity: 0 }}

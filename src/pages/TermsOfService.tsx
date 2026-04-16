@@ -4,11 +4,6 @@ import { Helmet } from 'react-helmet-async';
 export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-brand-dark pt-40 pb-24 px-8">
-      <Helmet>
-        <title>Términos de Servicio | CYBER ORGANIC AGENCY</title>
-        <meta name="description" content="Términos de Servicio de Cyber Organic Agency." />
-      </Helmet>
-
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

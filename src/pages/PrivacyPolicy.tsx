@@ -4,11 +4,6 @@ import { Helmet } from 'react-helmet-async';
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-brand-dark pt-40 pb-24 px-8">
-      <Helmet>
-        <title>Política de Privacidad | CYBER ORGANIC AGENCY</title>
-        <meta name="description" content="Política de Privacidad de Cyber Organic Agency conforme a la LGPD." />
-      </Helmet>
-
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

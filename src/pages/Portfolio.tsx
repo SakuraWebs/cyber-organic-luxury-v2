@@ -1,10 +1,12 @@
-import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
-import { useState, useRef } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence, useInView } from 'motion/react';
+import { useState, useRef, useEffect } from 'react';
 import { cn } from '@/src/lib/utils';
-import { Facebook, ArrowUpRight, Share2 } from 'lucide-react';
+import { Facebook, ArrowUpRight, Share2, Linkedin as LinkedinIcon } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
-import { projects } from '../data/projects';
+import { projects as localProjects } from '../data/projects';
 import ProjectModal from '../components/ProjectModal';
+import { db } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const XIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -20,15 +22,38 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 const categories = ['Todos', 'Web', 'Contenido', 'Marketing'];
 
-function ProjectCard({ project, onOpen }: { project: typeof projects[0], onOpen: (project: typeof projects[0]) => void }) {
+function ProjectCard({ project, onOpen }: { project: any, onOpen: (project: any) => void }) {
   const [showShare, setShowShare] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Intersection Observer for lazy loading
+  const isInView = useInView(containerRef, { once: true, margin: "300px 0px" });
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
+  const [deviceParams, setDeviceParams] = useState({ offset: 15, scale: 1.3 });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w >= 1024) {
+        setDeviceParams({ offset: 25, scale: 1.5 });
+      } else if (w >= 768) {
+        setDeviceParams({ offset: 15, scale: 1.3 });
+      } else {
+        setDeviceParams({ offset: 8, scale: 1.16 });
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const y = useTransform(scrollYProgress, [0, 1], [`-${deviceParams.offset}%`, `${deviceParams.offset}%`]);
 
   const cardVariants = {
     initial: { y: 0 },
@@ -44,6 +69,23 @@ function ProjectCard({ project, onOpen }: { project: typeof projects[0], onOpen:
     }
   };
 
+  const shareMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (shareMenuRef.current && !shareMenuRef.current.contains(event.target as Node)) {
+        setShowShare(false);
+      }
+    }
+
+    if (showShare) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showShare]);
+
   return (
     <motion.div
       ref={containerRef}
@@ -54,21 +96,27 @@ function ProjectCard({ project, onOpen }: { project: typeof projects[0], onOpen:
       style={{ position: 'relative' }}
       className="group relative overflow-hidden rounded-sm bg-brand-surface aspect-[4/5]"
     >
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.img
-          style={{ y, scale: 1.2 }}
-          src={`${project.image}.webp`}
-          alt={project.alt}
-          loading="lazy"
-          decoding="async"
-          className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-80 transition-all duration-700"
-          referrerPolicy="no-referrer"
-        />
+      <div className="absolute inset-0 overflow-hidden bg-brand-dark/40">
+        {isInView && (
+          <motion.img
+            style={{ y, scale: deviceParams.scale }}
+            src={project.image.includes('http') ? project.image : `${project.image}.webp`}
+            alt={project.alt}
+            loading="lazy"
+            decoding="async"
+            onLoad={() => setIsLoaded(true)}
+            className={cn(
+              "w-full h-full object-cover transition-all duration-1000 ease-out",
+              isLoaded ? "opacity-60 grayscale blur-none group-hover:grayscale-0 group-hover:opacity-80" : "opacity-0 blur-xl grayscale"
+            )}
+            referrerPolicy="no-referrer"
+          />
+        )}
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent opacity-80"></div>
       
       {/* Social Sharing Buttons */}
-      <div className="absolute top-6 right-6 z-20 flex flex-col items-end gap-3">
+      <div ref={shareMenuRef} className="absolute top-6 right-6 z-20 flex flex-col items-end gap-3">
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -94,6 +142,7 @@ function ProjectCard({ project, onOpen }: { project: typeof projects[0], onOpen:
                 { icon: Facebook, name: 'Facebook', url: (u: string) => `https://www.facebook.com/sharer/sharer.php?u=${u}` },
                 { icon: XIcon, name: 'X', url: (u: string) => `https://twitter.com/intent/tweet?url=${u}` },
                 { icon: WhatsAppIcon, name: 'WhatsApp', url: (u: string) => `https://api.whatsapp.com/send?text=${encodeURIComponent('Mira este proyecto de CYBER ORGANIC: ' + u)}` },
+                { icon: LinkedinIcon, name: 'LinkedIn', url: (u: string) => `https://www.linkedin.com/sharing/share-offsite/?url=${u}` },
               ].map((social) => (
                 <button
                   key={social.name}
@@ -143,10 +192,29 @@ export default function Portfolio() {
   const [activeCategory, setActiveCategory] = useState('Todos');
   const [visibleCount, setVisibleCount] = useState(6);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [allProjects, setAllProjects] = useState<any[]>(localProjects);
 
-  const filteredProjects = projects.filter(
+  useEffect(() => {
+    const fetchFirestoreProjects = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'projects'));
+        const firestoreProjects: any[] = [];
+        querySnapshot.forEach((doc) => {
+          firestoreProjects.push({ id: doc.id, ...doc.data() });
+        });
+        // Sort firestore projects by createdAt descending
+        firestoreProjects.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setAllProjects([...firestoreProjects, ...localProjects]);
+      } catch (error) {
+        console.error("Error fetching projects from Firestore:", error);
+      }
+    };
+    fetchFirestoreProjects();
+  }, []);
+
+  const filteredProjects = allProjects.filter(
     (p) => activeCategory === 'Todos' || p.category === activeCategory
   );
 
@@ -161,7 +229,7 @@ export default function Portfolio() {
     setIsLoadingMore(false);
   };
 
-  const handleOpenModal = (project: typeof projects[0]) => {
+  const handleOpenModal = (project: any) => {
     setSelectedProject(project);
     setIsModalOpen(true);
     document.body.style.overflow = 'hidden';
@@ -176,10 +244,6 @@ export default function Portfolio() {
 
   return (
     <div className="pt-40 pb-24 px-8 max-w-7xl mx-auto">
-      <Helmet>
-        <title>Portafolio | CYBER ORGANIC AGENCY</title>
-        <meta name="description" content="Explora nuestros proyectos seleccionados de diseño web, contenido y marketing digital para marcas de lujo." />
-      </Helmet>
       <header className="mb-24 text-center">
         <motion.span
           initial={{ opacity: 0 }}
