@@ -6,7 +6,7 @@ import { projects } from "./src/data/projects.js";
 import Stripe from "stripe";
 import nodemailer from "nodemailer";
 import { initializeApp as initClientApp } from 'firebase/app';
-import { getFirestore as getClientFirestore, doc, setDoc, getDoc, serverTimestamp, collection, query, where, getDocs, updateDoc } from 'firebase/firestore';
+import { getFirestore as getClientFirestore, doc, setDoc, getDoc, serverTimestamp, collection, query, where, getDocs, updateDoc, increment } from 'firebase/firestore';
 import { emailSequence } from "./src/data/emailSequence.js";
 
 // Initialize Firebase SDK for Server Environment (bypass admin SDK constraints)
@@ -222,18 +222,19 @@ async function startServer() {
       
       if (userId) {
         try {
-          const db = getFirestore();
+          if (!clientDb) throw new Error("Database not connected");
+          
           if (plan === 'Cyber Organic PRO') {
             // Subscription: Give them 1000 limits and "pro" role
-            await db.collection('users').doc(userId).update({
+            await updateDoc(doc(clientDb, 'users', userId), {
               maxDailyUsage: 1000,
               role: 'pro'
             });
             console.log("Updated user to PRO role");
           } else {
             // 5 USD Pack: Give them 50 credits/generations as a permanent addition
-            await db.collection('users').doc(userId).update({
-              maxDailyUsage: FieldValue.increment(50)
+            await updateDoc(doc(clientDb, 'users', userId), {
+              maxDailyUsage: increment(50)
             });
             console.log("Added 50 generations to user");
           }
