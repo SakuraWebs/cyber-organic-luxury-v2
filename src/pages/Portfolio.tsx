@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, AnimatePresence, useInView } from 'motion/react';
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '@/src/lib/utils';
-import { Facebook, ArrowUpRight, Share2, Linkedin as LinkedinIcon } from 'lucide-react';
+import { Facebook, ArrowUpRight, Share2, Linkedin as LinkedinIcon, Loader2 } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { projects as localProjects } from '../data/projects';
 import ProjectModal from '../components/ProjectModal';
@@ -97,10 +97,15 @@ function ProjectCard({ project, onOpen }: { project: any, onOpen: (project: any)
       className="group relative overflow-hidden rounded-sm bg-brand-surface aspect-[4/5]"
     >
       <div className="absolute inset-0 overflow-hidden bg-brand-dark/40">
+        {!isLoaded && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-brand-surface/80 backdrop-blur-sm">
+            <Loader2 className="w-6 h-6 text-brand-cyan animate-spin opacity-70" />
+          </div>
+        )}
         {isInView && (
           <motion.img
             style={{ y, scale: deviceParams.scale }}
-            src={project.image.includes('http') ? project.image : `${project.image}.webp`}
+            src={project.image.includes('http') || project.image.match(/\.(webp|jpg|jpeg|png|svg|gif)$/i) ? project.image : `${project.image}.webp`}
             alt={project.alt}
             loading="lazy"
             decoding="async"
@@ -163,9 +168,16 @@ function ProjectCard({ project, onOpen }: { project: any, onOpen: (project: any)
       </div>
 
       <div className="absolute bottom-0 left-0 p-10 z-10 w-full translate-y-6 group-hover:translate-y-0 transition-transform duration-700 ease-out">
-        <span className="font-sans text-[10px] tracking-widest text-brand-cyan uppercase mb-2 block">
-          {project.category}
-        </span>
+        <div className="flex items-center gap-3 mb-2">
+          <span className="font-sans text-[10px] tracking-widest text-brand-cyan uppercase block">
+            {project.category}
+          </span>
+          {project.id > 2 && (
+            <span className="font-sans text-[8px] tracking-widest text-white/70 bg-white/10 px-2 py-0.5 rounded-sm uppercase border border-white/20">
+              Demo
+            </span>
+          )}
+        </div>
         <h3 className="font-serif text-2xl text-white mb-2">{project.title}</h3>
         
         <motion.p 
@@ -215,7 +227,7 @@ export default function Portfolio() {
   }, []);
 
   const filteredProjects = allProjects.filter(
-    (p) => activeCategory === 'Todos' || p.category === activeCategory
+    (p) => activeCategory === 'Todos' || p.category.toLowerCase().includes(activeCategory.toLowerCase())
   );
 
   const displayedProjects = filteredProjects.slice(0, visibleCount);

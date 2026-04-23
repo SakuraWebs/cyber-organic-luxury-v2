@@ -46,12 +46,14 @@ service cloud.firestore {
     
     function isValidUser(data) {
       return data.keys().hasAll(['email', 'role', 'dailyUsage', 'maxDailyUsage', 'lastUsageDate']) &&
-             data.keys().hasOnly(['email', 'role', 'dailyUsage', 'maxDailyUsage', 'lastUsageDate']) &&
+             data.keys().hasOnly(['email', 'role', 'dailyUsage', 'maxDailyUsage', 'lastUsageDate', 'firstLoginDate', 'deviceId']) &&
              isValidEmail(data.email) &&
-             data.role in ['admin', 'user'] &&
+             data.role in ['admin', 'user', 'pro'] &&
              data.dailyUsage is number && data.dailyUsage >= 0 &&
              data.maxDailyUsage is number && data.maxDailyUsage >= 0 &&
-             data.lastUsageDate is string && data.lastUsageDate.matches("^\\d{4}-\\d{2}-\\d{2}$");
+             data.lastUsageDate is string && data.lastUsageDate.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             (!('firstLoginDate' in data) || data.firstLoginDate is string) &&
+             (!('deviceId' in data) || data.deviceId is string);
     }
 
     function isValidProject(data) {
@@ -66,16 +68,18 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();
       
-      // Allow create if they are the owner, and they don't give themselves admin (unless they are the default admin)
+      // Allow create if they are the owner, and they don't give themselves admin
       allow create: if isOwner(userId) && isValidUser(request.resource.data) && (
-        (request.resource.data.role == 'user' && request.resource.data.maxDailyUsage == 4) || isAdmin()
+        (request.resource.data.role == 'user' && request.resource.data.maxDailyUsage <= 4) || isAdmin()
       );
       
-      // Allow update if they are the owner, they don't change their role, email or maxDailyUsage, and they only update usage stats
+      // Allow update if they are the owner, they don't change their role, email, and they only update usage stats/devices
       allow update: if (isOwner(userId) && isValidUser(request.resource.data) && 
          request.resource.data.role == resource.data.role && 
          request.resource.data.email == resource.data.email &&
-         request.resource.data.maxDailyUsage == resource.data.maxDailyUsage) || 
+         (!('deviceId' in resource.data) || request.resource.data.deviceId == resource.data.deviceId) &&
+         (!('firstLoginDate' in resource.data) || request.resource.data.firstLoginDate == resource.data.firstLoginDate) &&
+         (request.resource.data.maxDailyUsage <= resource.data.maxDailyUsage)) || 
          (isAdmin() && isValidUser(request.resource.data));
     }
 
@@ -83,6 +87,11 @@ service cloud.firestore {
       allow read: if true; // Publicly readable
       allow create, update: if isAdmin() && isValidProject(request.resource.data);
       allow delete: if isAdmin();
+    }
+
+    match /leads/{email} {
+      allow get, create: if true;
+      allow list, update, delete: if isAdmin();
     }
   }
 }

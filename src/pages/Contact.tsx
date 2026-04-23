@@ -105,7 +105,7 @@ export default function Contact() {
     setIsSubmitting(true);
     
     try {
-      const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || 'info@cyberorganicagency.com';
+      const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || 'enrique.rfm@gmail.com';
       const response = await fetch(`https://formsubmit.co/ajax/${contactEmail}`, {
         method: 'POST',
         headers: {

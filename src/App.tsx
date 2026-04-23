@@ -82,8 +82,11 @@ function DynamicMetadata() {
       <meta name="description" content={metadata.description} />
       <meta property="og:title" content={metadata.title} />
       <meta property="og:description" content={metadata.description} />
+      <meta property="og:image" content={`${window.location.origin}/og-image.png`} />
       <meta name="twitter:title" content={metadata.title} />
       <meta name="twitter:description" content={metadata.description} />
+      <meta name="twitter:image" content={`${window.location.origin}/og-image.png`} />
+      <meta name="twitter:card" content="summary_large_image" />
     </Helmet>
   );
 }

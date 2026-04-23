@@ -47,7 +47,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  src={project.image.includes('http') ? project.image : `${project.image}.webp`}
+                  src={project.image.includes('http') || project.image.match(/\.(webp|jpg|jpeg|png|svg|gif)$/i) ? project.image : `${project.image}.webp`}
                   alt={project.alt}
                   loading="lazy"
                   decoding="async"
@@ -60,7 +60,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 + index * 0.1 }}
-                    src={img.includes('http') ? img : `${img}.webp`}
+                    src={img.includes('http') || img.match(/\.(webp|jpg|jpeg|png|svg|gif)$/i) ? img : `${img}.webp`}
                     alt={`${project.title} gallery ${index + 1}`}
                     loading="lazy"
                     decoding="async"

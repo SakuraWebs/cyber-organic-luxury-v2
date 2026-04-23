@@ -229,17 +229,6 @@ export default function LivingData() {
             }}
             className="absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-brand-cyan to-transparent z-10 opacity-30 group-hover/chart:opacity-60 transition-opacity"
           />
-          
-          <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
-            <motion.div 
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1.5 h-1.5 rounded-full bg-brand-cyan shadow-[0_0_8px_rgba(0,220,229,0.8)]"
-            />
-            <span className="font-mono text-[8px] tracking-[0.3em] text-brand-cyan uppercase">
-              {isSynthesizing ? 'Inicializando Núcleo' : 'Datos Sincronizados'}
-            </span>
-          </div>
 
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -260,9 +249,40 @@ export default function LivingData() {
               <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }} />
               <Legend 
                 verticalAlign="top" 
-                align="right" 
-                iconType="circle"
-                wrapperStyle={{ paddingBottom: '40px', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', fontFamily: 'Space Grotesk' }}
+                align="right"
+                content={(props) => {
+                  const { payload } = props;
+                  return (
+                    <div className="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-6 sm:gap-8 pb-10 w-full pr-4">
+                      {/* Standard Legend Items */}
+                      <div className="flex items-center gap-6">
+                        {payload?.map((entry: any, index: number) => (
+                          <div key={`item-${index}`} className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                            <span className="font-sans text-[10px] uppercase tracking-[0.2em]" style={{ color: entry.color }}>
+                              {entry.value}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Subtle Separator */}
+                      <div className="hidden sm:block w-px h-4 bg-white/10"></div>
+
+                      {/* Status Indicator (Moved from absolute positioning into the flex layout) */}
+                      <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+                        <motion.div 
+                          animate={{ opacity: [0.4, 1, 0.4] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className="w-1.5 h-1.5 rounded-full bg-brand-cyan shadow-[0_0_8px_rgba(0,220,229,0.8)]"
+                        />
+                        <span className="font-mono text-[8px] tracking-[0.3em] text-brand-cyan uppercase">
+                          {isSynthesizing ? 'Inicializando...' : 'Datos Sincronizados'}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                }}
               />
               <Line 
                 name="Leads"

@@ -410,7 +410,7 @@ export default function Admin() {
               {projects.map((project) => (
                 <div key={project.id} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden group">
                   <div className="h-48 overflow-hidden relative">
-                    <img src={project.image.includes('http') ? project.image : `${project.image}.webp`} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={project.image.includes('http') || project.image.match(/\.(webp|jpg|jpeg|png|svg|gif)$/i) ? project.image : `${project.image}.webp`} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     <div className="absolute top-2 right-2">
                       <button 
                         onClick={() => handleDeleteProject(project.id)}

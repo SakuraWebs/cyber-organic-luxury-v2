@@ -60,8 +60,17 @@ export default function ProjectDetail() {
   return (
     <div className="min-h-screen bg-brand-dark pt-32 pb-24">
       <Helmet>
-        <title>{project.title} | CYBER ORGANIC AGENCY</title>
-        <meta name="description" content={project.desc} />
+        <title>{project.metaTitle || `${project.title} | CYBER ORGANIC AGENCY`}</title>
+        <meta name="description" content={project.metaDesc || project.desc} />
+        <meta property="og:title" content={project.metaTitle || `${project.title} | CYBER ORGANIC AGENCY`} />
+        <meta property="og:description" content={project.metaDesc || project.desc} />
+        <meta property="og:image" content={project.image.includes('http') || project.image.match(/\.(webp|jpg|jpeg|png|svg|gif)$/i) ? project.image : `${window.location.origin}${project.image}.webp`} />
+        <meta property="og:url" content={window.location.href} />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={project.metaTitle || `${project.title} | CYBER ORGANIC AGENCY`} />
+        <meta name="twitter:description" content={project.metaDesc || project.desc} />
+        <meta name="twitter:image" content={project.image.includes('http') || project.image.match(/\.(webp|jpg|jpeg|png|svg|gif)$/i) ? project.image : `${window.location.origin}${project.image}.webp`} />
       </Helmet>
 
       {/* Hero Section */}
@@ -70,9 +79,9 @@ export default function ProjectDetail() {
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.6 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
-          src={project.image.includes('http') ? project.image : `${project.image}.webp`}
+          src={project.image.includes('http') || project.image.match(/\.(webp|jpg|jpeg|png|svg|gif)$/i) ? project.image : `${project.image}.webp`}
           alt={project.alt}
-          className="w-full h-full object-cover grayscale"
+          className="w-full h-full object-cover object-top grayscale"
           referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/40 to-transparent"></div>
@@ -91,9 +100,16 @@ export default function ProjectDetail() {
                 <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
                 Volver al Portafolio
               </Link>
-              <span className="block font-sans text-xs uppercase tracking-[0.4em] text-brand-cyan mb-4">
-                {project.category}
-              </span>
+              <div className="flex items-center gap-4 mb-4">
+                <span className="block font-sans text-xs uppercase tracking-[0.4em] text-brand-cyan">
+                  {project.category}
+                </span>
+                {project.id > 2 && (
+                  <span className="font-sans text-[10px] tracking-widest text-white/80 bg-white/10 px-3 py-1 rounded-sm uppercase border border-white/20">
+                    Proyecto de Demostración
+                  </span>
+                )}
+              </div>
               <h1 className="font-serif text-5xl md:text-8xl text-white mb-6 leading-tight">
                 {project.title.split(' ')[0]} <br />
                 <span className="italic text-brand-gold">{project.title.split(' ').slice(1).join(' ')}</span>
@@ -150,7 +166,13 @@ export default function ProjectDetail() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => window.open(project.link, '_blank')}
+                onClick={() => {
+                  if (project.website) {
+                    window.open(project.website, '_blank');
+                  } else {
+                    window.location.href = '/';
+                  }
+                }}
                 className="w-full py-5 bg-brand-gold text-brand-dark font-sans text-xs uppercase tracking-widest font-bold hover:bg-white transition-all duration-300 flex items-center justify-center gap-3"
               >
                 Visitar Sitio <ExternalLink className="w-4 h-4" />
@@ -183,7 +205,7 @@ export default function ProjectDetail() {
                     className="relative aspect-video overflow-hidden rounded-sm group"
                   >
                     <img
-                      src={img.includes('http') ? img : `${img}.webp`}
+                      src={img.includes('http') || img.match(/\.(webp|jpg|jpeg|png|svg|gif)$/i) ? img : `${img}.webp`}
                       alt={`${project.title} gallery ${index + 1}`}
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
                       referrerPolicy="no-referrer"

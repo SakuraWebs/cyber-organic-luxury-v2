@@ -3,6 +3,7 @@ import { ArrowRight, Star, Leaf, Cpu, Droplets, Share2, Facebook } from 'lucide-
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
+import Newsletter from '../components/Newsletter';
 
 const XIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -19,7 +20,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 export default function Home() {
   const [showAuraShare, setShowAuraShare] = useState(false);
 
-  const shareUrl = window.location.origin + '/portafolio/aura-boutique';
+  const shareUrl = window.location.origin + '/portafolio/1';
 
   return (
     <div className="pt-32 pb-24">
@@ -77,20 +78,21 @@ export default function Home() {
       {/* Bento Grid Portfolio */}
       <section className="px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* Main Featured Project: Aura Boutique */}
+          {/* Main Featured Project: Atalaya 24 */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -8 }}
+            onClick={() => window.location.href = '/portafolio/1'}
             className="md:col-span-8 group relative overflow-hidden rounded-sm bg-brand-surface h-[600px] cursor-pointer"
           >
             <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-110">
               <img
-                alt="Diseño web E-commerce de lujo para Aura Boutique"
-                className="w-full h-full object-cover opacity-60 mix-blend-luminosity grayscale group-hover:grayscale-0 transition-all duration-1000"
-                src="https://picsum.photos/seed/luxury-boutique/1200/800.webp"
+                alt="Diseño web y sistemas para Atalaya 24"
+                className="w-full h-full object-cover object-top opacity-60 mix-blend-luminosity grayscale group-hover:grayscale-0 transition-all duration-1000"
+                src="https://atalaya24.com/wp-content/uploads/2026/01/ELIAS.webp"
                 loading="lazy"
                 decoding="async"
                 referrerPolicy="no-referrer"
@@ -105,13 +107,13 @@ export default function Home() {
                 className="flex items-center gap-3 mb-4"
               >
                 <span className="px-3 py-1 bg-white/10 text-white text-[10px] uppercase tracking-widest font-bold">
-                  E-Commerce Luxury
+                  Sistemas de IA & Web
                 </span>
               </motion.div>
-              <h2 className="font-serif text-5xl text-white mb-4">Aura Boutique</h2>
+              <h2 className="font-serif text-5xl text-white mb-4">Atalaya 24</h2>
               <p className="font-sans text-gray-400 max-w-md mb-8">
-                Un ecosistema digital reactivo que respira según el flujo de visitantes,
-                transformando la compra en una experiencia meditativa.
+                Arquitectura digital y biométrica de vanguardia enfocada en transmitir eficiencia y
+                liderazgo transfronterizo en seguridad interactiva.
               </p>
               <button className="flex items-center gap-4 text-brand-gold group/btn">
                 <span className="font-sans text-xs uppercase tracking-widest">Ver Proyecto</span>
@@ -166,30 +168,31 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Secondary Project: Synapse Analytics */}
+          {/* Secondary Project: Rancho Branco */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -8 }}
+            onClick={() => window.location.href = '/portafolio/2'}
             className="md:col-span-4 group relative overflow-hidden rounded-sm bg-brand-surface h-[600px] cursor-pointer"
           >
             <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-110">
               <img
-                alt="Visualización de datos biométricos Synapse Analytics"
-                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-all duration-1000"
-                src="https://picsum.photos/seed/data-viz/800/1200.webp"
+                alt="Sitio inmersivo y bucólico para Rancho Branco"
+                className="w-full h-full object-cover opacity-60 mix-blend-luminosity grayscale group-hover:grayscale-0 transition-all duration-1000"
+                src="https://ranchobranco.com.br/1.1.jpeg"
                 loading="lazy"
                 decoding="async"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-dark to-transparent opacity-60"></div>
             </div>
-            <div className="absolute inset-0 p-10 flex flex-col justify-end">
-              <h3 className="font-serif text-3xl text-white mb-3">Synapse Analytics</h3>
+            <div className="absolute inset-0 p-10 flex flex-col justify-end relative z-10">
+              <h3 className="font-serif text-3xl text-white mb-3">Rancho Branco</h3>
               <p className="font-sans text-gray-400 text-xs uppercase tracking-widest leading-loose mb-6">
-                Visualización de datos biométricos en tiempo real para el sector salud de alta gama.
+                Refugio hiper-local y entornos bucólicos en medios inmersivos.
               </p>
               <div className="h-1 w-0 bg-brand-gold group-hover:w-full transition-all duration-700"></div>
             </div>
@@ -216,9 +219,14 @@ export default function Home() {
             </div>
             <div className="absolute inset-0 p-10 flex flex-col justify-between border-t-2 border-transparent group-hover:border-brand-gold transition-all">
               <div className="flex justify-between items-start">
-                <span className="font-sans text-[10px] tracking-widest text-brand-cyan border border-brand-cyan/30 px-2 py-1 uppercase">
-                  Sostenibilidad
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-sans text-[10px] tracking-widest text-brand-cyan border border-brand-cyan/30 px-2 py-1 uppercase">
+                    Sostenibilidad
+                  </span>
+                  <span className="font-sans text-[8px] tracking-widest text-white/70 bg-white/10 px-2 py-0.5 rounded-sm uppercase border border-white/20">
+                    Demo
+                  </span>
+                </div>
                 <motion.div
                   animate={{ y: [0, -5, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -273,6 +281,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Newsletter / Lead Magnet */}
+      <Newsletter />
 
       {/* Aesthetic Divider */}
       <div className="py-32 flex justify-center opacity-20">
