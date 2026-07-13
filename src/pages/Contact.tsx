@@ -3,13 +3,14 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Mail, Phone, Send, Check, CheckCircle, X } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { Helmet } from 'react-helmet-async';
+import toast from 'react-hot-toast';
 
 const serviceOptions = [
   'Website de Alta Performance',
-  'Producción de Contenido',
-  'Marketing Digital',
-  'Branding & Identidad',
-  'E-Commerce Luxury',
+  'Desarrollo de APPs',
+  'Desarrollo SaaS / Micro SaaS',
+  'Arquitectura Cloud',
+  'Firebase Hosting',
   'Consultoría Estratégica'
 ];
 
@@ -99,33 +100,32 @@ export default function Contact() {
     if (Object.keys(newErrors).length > 0) {
       const firstErrorField = document.getElementById(Object.keys(newErrors)[0]);
       firstErrorField?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      toast.error('Por favor, corrige los errores en el formulario');
       return;
     }
 
     setIsSubmitting(true);
+    const loadingToast = toast.loading('Enviando solicitud...');
     
     try {
-      const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || 'enrique.rfm@gmail.com';
-      const response = await fetch(`https://formsubmit.co/ajax/${contactEmail}`, {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify({
-          ...formState,
-          _subject: 'CYBER ORGANIC AGENCY - Nueva Solicitud de Proyecto',
-          _template: 'table'
-        })
+        body: JSON.stringify(formState)
       });
 
       if (response.ok) {
+        toast.success('Solicitud enviada con éxito', { id: loadingToast });
         setIsSuccess(true);
       } else {
         throw new Error('Error al enviar el formulario');
       }
     } catch (error) {
       console.error('Error:', error);
+      toast.error('Hubo un problema al enviar tu solicitud', { id: loadingToast });
       setErrors({ submit: 'Hubo un problema al enviar tu solicitud. Por favor, intenta de nuevo.' });
     } finally {
       setIsSubmitting(false);
@@ -191,7 +191,7 @@ export default function Contact() {
               <div>
                 <h4 className="font-sans text-[10px] tracking-widest text-brand-cyan uppercase mb-2">Teléfono</h4>
                 <p className="font-serif text-xl text-white hover:text-brand-gold transition-colors cursor-pointer">
-                  +598 95 467 979
+                  +55 55 99181 25
                 </p>
               </div>
             </div>
@@ -252,7 +252,7 @@ export default function Contact() {
                     "w-full bg-transparent border-b py-4 font-sans text-white focus:outline-none transition-colors",
                     errors.phone && touched.phone ? "border-red-500/50 focus:border-red-500" : "border-white/10 focus:border-brand-gold"
                   )}
-                  placeholder="+598 ..."
+                  placeholder="+55 ..."
                 />
                 {errors.phone && touched.phone && (
                   <p className="text-red-500 text-[10px] uppercase tracking-widest mt-1">{errors.phone}</p>
@@ -388,6 +388,9 @@ export default function Contact() {
                 </>
               )}
             </button>
+            {errors.submit && (
+              <p className="text-red-500 text-[12px] uppercase tracking-widest mt-4 text-center">{errors.submit}</p>
+            )}
           </form>
         </div>
       </div>

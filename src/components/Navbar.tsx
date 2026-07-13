@@ -8,6 +8,8 @@ import { auth, db } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 
+
+
 const baseNavItems = [
   { name: 'Inicio', path: '/' },
   { name: 'Nosotros', path: '/nosotros' },
@@ -59,6 +61,17 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  
+
+  const baseNavItems = [
+    { name: "Inicio", path: '/' },
+    { name: "Nosotros", path: '/nosotros' },
+    { name: "Servicios", path: '/servicios' },
+    { name: "Portafolio", path: '/portafolio' },
+    { name: "Living Data", path: '/living-data' },
+    { name: "AI Studio", path: '/ai-studio' },
+    { name: "Contacto", path: '/contacto' },
+  ];
   const location = useLocation();
 
   useEffect(() => {
@@ -121,15 +134,21 @@ export default function Navbar() {
               </Link>
             </motion.div>
           ))}
+          <div className="pl-4 border-l border-white/10 ml-2">
+            
+          </div>
         </div>
 
         {/* Mobile Toggle */}
-        <button 
-          className={cn("md:hidden text-white transition-opacity duration-300", isOpen ? "opacity-0 pointer-events-none" : "opacity-100")} 
-          onClick={() => setIsOpen(true)}
-        >
-          <Menu />
-        </button>
+        <div className="md:hidden flex items-center gap-4">
+          
+          <button 
+            className={cn("text-white transition-opacity duration-300", isOpen ? "opacity-0 pointer-events-none" : "opacity-100")} 
+            onClick={() => setIsOpen(true)}
+          >
+            <Menu />
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}

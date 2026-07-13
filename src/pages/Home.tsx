@@ -1,9 +1,11 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, Star, Leaf, Cpu, Droplets, Share2, Facebook } from 'lucide-react';
+import { ArrowRight, Star, Leaf, Cpu, Droplets, Share2, Facebook, Globe, Zap, Shield, Server } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import Newsletter from '../components/Newsletter';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
 
 const XIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -17,8 +19,36 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const performanceData = [
+  { time: '00:00', firebase: 45, traditional: 350 },
+  { time: '04:00', firebase: 48, traditional: 400 },
+  { time: '08:00', firebase: 46, traditional: 450 },
+  { time: '12:00', firebase: 42, traditional: 2800 },
+  { time: '16:00', firebase: 50, traditional: 3500 },
+  { time: '20:00', firebase: 47, traditional: 1200 },
+  { time: '24:00', firebase: 45, traditional: 380 },
+];
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-brand-surface border border-white/10 p-4 rounded-sm shadow-xl backdrop-blur-md">
+        <p className="font-sans text-white text-xs mb-2">{label}</p>
+        <p className="font-sans text-[#FFCA28] text-sm flex items-center justify-between gap-4">
+          <span>Firebase:</span> <span className="font-bold">{payload[0].value}ms</span>
+        </p>
+        <p className="font-sans text-brand-cyan text-sm flex items-center justify-between gap-4">
+          <span>Tradicional:</span> <span className="font-bold">{payload[1].value}ms</span>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function Home() {
   const [showAuraShare, setShowAuraShare] = useState(false);
+  
 
   const shareUrl = window.location.origin + '/portafolio/1';
 
@@ -57,8 +87,9 @@ export default function Home() {
               transition={{ duration: 1.2, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="font-serif text-6xl md:text-8xl font-medium tracking-tight text-white leading-[0.9]"
             >
-              Bio-Digital <br />
-              <span className="italic text-brand-gold">Crafts</span>
+              Diseño <br />
+              <span className="italic text-brand-gold">Bio-Digital</span><br/>
+              <span className="text-4xl md:text-6xl text-gray-400">para Marcas de Lujo</span>
             </motion.h1>
           </div>
           <motion.div
@@ -68,8 +99,8 @@ export default function Home() {
             className="max-w-sm"
           >
             <p className="font-sans text-gray-400 leading-relaxed text-sm tracking-wide">
-              Donde la precisión algorítmica se funde con la imperfección orgánica.
-              Explorando el lujo en la era del silicio y la clorofila.
+              Creamos ecosistemas digitales que respiram, evolucionan y se adaptan. Tecnología invisible, impacto memorable.
+
             </p>
           </motion.div>
         </div>
@@ -279,6 +310,160 @@ export default function Home() {
               Iniciar Proyecto
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Firebase Hosting Bento Grid */}
+      <section className="px-8 max-w-7xl mx-auto my-32">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16 text-center max-w-3xl mx-auto"
+        >
+          <span className="font-sans text-xs uppercase tracking-[0.4em] text-[#FFCA28] mb-6 block">Serverless Architecture</span>
+          <h2 className="font-serif text-5xl text-white mb-6">El Poder de <span className="italic text-[#FFCA28]">Firebase Hosting</span></h2>
+          <p className="font-sans text-gray-400 text-sm leading-relaxed">
+            Hospedaje de grado empresarial que escala instantáneamente. Supera las limitaciones de los servidores tradicionales con un ecosistema global sin caídas y ultra rápido.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          {/* Global CDN */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="md:col-span-8 bg-brand-surface border border-white/5 p-12 rounded-sm relative overflow-hidden group hover:border-[#FFCA28]/30 transition-all duration-500"
+          >
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Globe className="w-48 h-48 text-[#FFCA28]" />
+            </div>
+            <div className="relative z-10 flex flex-col h-full justify-between">
+              <div>
+                <div className="w-12 h-12 bg-[#FFCA28]/10 flex items-center justify-center rounded-sm mb-6">
+                  <Globe className="w-6 h-6 text-[#FFCA28]" />
+                </div>
+                <h3 className="font-serif text-3xl text-white mb-4">CDN Global de Baja Latencia</h3>
+                <p className="font-sans text-gray-400 text-sm max-w-md leading-relaxed">
+                  Tus aplicaciones se distribuyen automáticamente en servidores perimetrales de Google en todo el mundo. Esto garantiza que tus usuarios experimenten tiempos de carga casi instantáneos, sin importar su ubicación geográfica.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Zero Downtime */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ delay: 0.1 }}
+            className="md:col-span-4 bg-brand-dark border border-white/5 p-12 rounded-sm relative overflow-hidden group hover:border-brand-cyan/30 transition-all duration-500"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative z-10">
+              <div className="w-12 h-12 bg-brand-cyan/10 flex items-center justify-center rounded-sm mb-6">
+                <Zap className="w-6 h-6 text-brand-cyan" />
+              </div>
+              <h3 className="font-serif text-2xl text-white mb-4">Zero-Downtime</h3>
+              <p className="font-sans text-gray-400 text-xs leading-relaxed">
+                Despliegues atómicos instantáneos. Cuando actualizas tu APP, el tráfico cambia inmediatamente a la nueva versión sin cortes, asegurando disponibilidad del 99.99%.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Automatic SSL */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="md:col-span-4 bg-[#FFCA28]/5 border border-[#FFCA28]/10 p-12 rounded-sm relative overflow-hidden group hover:bg-[#FFCA28]/10 transition-all duration-500"
+          >
+            <div className="relative z-10">
+              <div className="w-12 h-12 bg-[#FFCA28]/20 flex items-center justify-center rounded-sm mb-6">
+                <Shield className="w-6 h-6 text-[#FFCA28]" />
+              </div>
+              <h3 className="font-serif text-2xl text-white mb-4">SSL Automático</h3>
+              <p className="font-sans text-gray-400 text-xs leading-relaxed">
+                Certificados SSL gratuitos y auto-renovables provisionados en segundos para tu dominio personalizado. Máxima encriptación de extremo a extremo sin configuración manual.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Scale to Infinity */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="md:col-span-8 bg-brand-surface border border-white/5 p-12 rounded-sm relative overflow-hidden group hover:border-brand-gold/30 transition-all duration-500"
+          >
+            <div className="absolute bottom-0 right-0 opacity-10 group-hover:opacity-20 transition-opacity translate-x-1/4 translate-y-1/4">
+               <Server className="w-64 h-64 text-brand-gold" />
+            </div>
+            <div className="relative z-10">
+              <div className="w-12 h-12 bg-brand-gold/10 flex items-center justify-center rounded-sm mb-6">
+                <Server className="w-6 h-6 text-brand-gold" />
+              </div>
+              <h3 className="font-serif text-3xl text-white mb-4">Escalabilidad Serverless</h3>
+              <p className="font-sans text-gray-400 text-sm max-w-md leading-relaxed">
+                Ya sea que tengas 10 usuarios o 10 millones en un pico repentino de tráfico, Firebase ajusta los recursos de forma automática e invisible. Olvídate de aprovisionar servidores o lidiar con balanceadores de carga.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Performance Graph */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            className="md:col-span-12 bg-brand-dark border border-white/5 p-8 md:p-12 rounded-sm relative overflow-hidden group hover:border-white/10 transition-all duration-500"
+          >
+            <div className="flex flex-col md:flex-row gap-8 justify-between items-start mb-8">
+              <div>
+                <h3 className="font-serif text-3xl text-white mb-2">Latencia & Uptime (Ping en ms)</h3>
+                <p className="font-sans text-gray-400 text-sm max-w-xl">
+                  Comparativa de rendimiento en un pico de tráfico. 
+                  Firebase mantiene estabilidad global, mientras que los servidores compartidos tradicionales colapsan ante la saturación, resultando en caídas de servicio.
+                </p>
+              </div>
+              <div className="flex items-center gap-6 font-sans text-xs uppercase tracking-widest flex-wrap">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-[#FFCA28]"></div>
+                  <span className="text-gray-300">Firebase Hosting</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-brand-cyan"></div>
+                  <span className="text-gray-300">Servidor Tradicional</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="h-[300px] w-full mt-8">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={performanceData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorFirebase" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#FFCA28" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#FFCA28" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorTrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#00f0ff" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#00f0ff" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                  <XAxis dataKey="time" stroke="rgba(255,255,255,0.2)" fontSize={12} tickMargin={10} axisLine={false} tickLine={false} />
+                  <YAxis stroke="rgba(255,255,255,0.2)" fontSize={12} tickMargin={10} axisLine={false} tickLine={false} />
+                  <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, strokeDasharray: '3 3' }} />
+                  <Area type="monotone" dataKey="traditional" stroke="#00f0ff" strokeWidth={2} fillOpacity={1} fill="url(#colorTrad)" />
+                  <Area type="monotone" dataKey="firebase" stroke="#FFCA28" strokeWidth={3} fillOpacity={1} fill="url(#colorFirebase)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </motion.div>
         </div>
       </section>
 

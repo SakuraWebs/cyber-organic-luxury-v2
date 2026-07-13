@@ -253,13 +253,13 @@ export default function LivingData() {
                 content={(props) => {
                   const { payload } = props;
                   return (
-                    <div className="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-6 sm:gap-8 pb-10 w-full pr-4">
+                    <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-6 pb-8 w-full pr-0 sm:pr-4">
                       {/* Standard Legend Items */}
-                      <div className="flex items-center gap-6">
+                      <div className="flex flex-wrap items-center justify-end gap-4">
                         {payload?.map((entry: any, index: number) => (
                           <div key={`item-${index}`} className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-                            <span className="font-sans text-[10px] uppercase tracking-[0.2em]" style={{ color: entry.color }}>
+                            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: entry.color }} />
+                            <span className="font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.1em] sm:tracking-[0.2em] whitespace-nowrap" style={{ color: entry.color }}>
                               {entry.value}
                             </span>
                           </div>
@@ -269,14 +269,14 @@ export default function LivingData() {
                       {/* Subtle Separator */}
                       <div className="hidden sm:block w-px h-4 bg-white/10"></div>
 
-                      {/* Status Indicator (Moved from absolute positioning into the flex layout) */}
-                      <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+                      {/* Status Indicator */}
+                      <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 whitespace-nowrap mt-2 sm:mt-0">
                         <motion.div 
                           animate={{ opacity: [0.4, 1, 0.4] }}
                           transition={{ duration: 2, repeat: Infinity }}
-                          className="w-1.5 h-1.5 rounded-full bg-brand-cyan shadow-[0_0_8px_rgba(0,220,229,0.8)]"
+                          className="w-1.5 h-1.5 rounded-full bg-brand-cyan shadow-[0_0_8px_rgba(0,220,229,0.8)] flex-shrink-0"
                         />
-                        <span className="font-mono text-[8px] tracking-[0.3em] text-brand-cyan uppercase">
+                        <span className="font-mono text-[8px] tracking-[0.2em] sm:tracking-[0.3em] text-brand-cyan uppercase">
                           {isSynthesizing ? 'Inicializando...' : 'Datos Sincronizados'}
                         </span>
                       </div>

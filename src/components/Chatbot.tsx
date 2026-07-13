@@ -34,7 +34,7 @@ export default function Chatbot() {
         config: {
           systemInstruction: `Eres el 'Asistente Virtual' de la agencia Cyber Organic, una agencia global y sin fronteras con base estratégica en Hispanoamérica. Tu tono es elegante, tecnológico, sofisticado, servicial y altamente persuasivo.
 
-La agencia ofrece diseño web de alta gama, producción de contenido bio-digital, marketing estratégico y arquitectura en Google Cloud a nivel internacional. Fundadores: Florencia y Enrique. 
+La agencia ofrece diseño y desarrollo web de alta gama, creación de APPs, Micro SaaS y SaaS, arquitectura en Google Cloud y hospedaje especializado en Firebase Hosting a nivel internacional. Fundadores: Enrique. 
 
 Misiones Clave:
 1. IDIOMA / MULTILINGÜISMO (REGLA DE ORO): Detecta automáticamente el idioma en el que te escribe el usuario (español, inglés, portugués, etc.) y responde SIEMPRE en ese mismo idioma, manteniendo tu personalidad elegante y persuasiva.
@@ -86,19 +86,15 @@ Misiones Clave:
          options = [
           { 
             label: "Conectar con Enrique (WhatsApp)", 
-            href: "https://wa.me/555591812505?text=Hola%20Enrique,%20estaba%20hablando%20con%20el%20Conserje%20Bio-Digital%20y%20me%20gustaría%20contactarte." 
+            href: "https://wa.me/55559918125?text=Hola%20Enrique,%20estaba%20hablando%20con%20el%20Asistente%20Virtual%20y%20me%20gustaría%20contactarte." 
           }
         ];
       } else if (currentCount === 3) {
-        botText += "\n\nHe notado su interés continuo. Para brindarle una experiencia de nivel premium, puedo transferir esta sesión directamente a nuestros fundadores. ¿Con quién prefiere hablar?";
+        botText += "\n\nHe notado su interés continuo. Para brindarle una experiencia de nivel premium, puedo transferir esta sesión directamente con nuestro fundador, Enrique Fernández.";
         options = [
           { 
-            label: "Florencia (Diseño/Ventas)", 
-            href: "https://wa.me/59895467979?text=Hola%20Florencia,%20vengo%20del%20Conserje%20Bio-Digital%20y%20quisiera%20información." 
-          },
-          { 
-            label: "Enrique (Tecnología)", 
-            href: "https://wa.me/555591812505?text=Hola%20Enrique,%20vengo%20del%20Conserje%20Bio-Digital%20y%20quisiera%20información." 
+            label: "Conectar con Enrique (WhatsApp)", 
+            href: "https://wa.me/55559918125?text=Hola%20Enrique,%20vengo%20del%20Asistente%20Virtual%20y%20quisiera%20información." 
           }
         ];
       }

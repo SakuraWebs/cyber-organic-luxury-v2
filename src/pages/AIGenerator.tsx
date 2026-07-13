@@ -5,10 +5,11 @@ import { GoogleGenAI } from '@google/genai';
 import { auth, db } from '../firebase';
 import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
-import { loadStripe } from '@stripe/stripe-js';
+
+
 
 // Define the public key locally for the frontend initialization
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
+
 
 interface UserData {
   email: string;
@@ -21,6 +22,7 @@ interface UserData {
 }
 
 export default function AIGenerator() {
+  
   const [generationMode, setGenerationMode] = useState<'text' | 'image'>('text');
   const [prompt, setPrompt] = useState('');
   
@@ -254,7 +256,7 @@ export default function AIGenerator() {
     if (!user) return;
     setIsLoading(true);
     try {
-      const response = await fetch('/api/create-checkout-session', {
+      const response = await fetch('/api/create-mercadopago-preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -278,7 +280,7 @@ export default function AIGenerator() {
     } catch (err: any) {
       console.error("Checkout error:", err);
       if (err.message.includes('publishable API key')) {
-        setError(`Error del Servidor: La llave de Stripe configurada es pública, debe usar la llave Privada/Secreta (Comienza con sk_test o sk_live).`);
+        setError(`Error del Servidor: La llave de Mercado Pago configurada es pública, debe usar la llave Privada/Secreta (Comienza con APP_USR-).`);
       } else {
         setError(`Error al procesar pago: ${err.message}`);
       }
@@ -762,6 +764,114 @@ export default function AIGenerator() {
             </motion.div>
           </div>
         )}
+        
+        {/* Download / Micro SaaS Apps Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-32 pt-20 border-t border-white/10"
+        >
+          <div className="text-center mb-16">
+            <span className="font-sans text-xs uppercase tracking-[0.4em] text-brand-cyan mb-4 block">Lleva la IA contigo</span>
+            <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">Descarga <span className="italic text-brand-cyan">AI Studio</span></h2>
+            <p className="text-gray-400 max-w-2xl mx-auto text-sm leading-relaxed">
+              Experimenta el poder de nuestra tecnología de forma nativa. Hemos empaquetado nuestra infraestructura en aplicaciones optimizadas para Android y Windows, demostrando nuestra capacidad de desarrollo de APPs y Micro SaaS.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Android App Card */}
+            <div className="bg-white/5 border border-white/10 p-8 rounded-2xl relative overflow-hidden group hover:border-[#3DDC84]/50 transition-all duration-500">
+              <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-32 h-32 text-[#3DDC84]">
+                  <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.85 12 7.85c-1.8533 0-3.5902.3939-5.1367 1.1006L4.841 5.4475a.415.415 0 00-.5676-.1521.415.415 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396" />
+                </svg>
+              </div>
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-[#3DDC84]/10 rounded-full flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-[#3DDC84]">
+                      <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.85 12 7.85c-1.8533 0-3.5902.3939-5.1367 1.1006L4.841 5.4475a.415.415 0 00-.5676-.1521.415.415 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-serif text-white">App Android Nativa</h3>
+                </div>
+                
+                <ul className="space-y-3 mb-8 flex-1">
+                  <li className="flex items-start gap-2 text-sm text-gray-400">
+                    <Zap className="w-4 h-4 text-[#3DDC84] shrink-0 mt-0.5" />
+                    <span>Rendimiento nativo fluido y notificaciones push.</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm text-gray-400">
+                    <Zap className="w-4 h-4 text-[#3DDC84] shrink-0 mt-0.5" />
+                    <span>Acceso con un toque, dondequiera que estés.</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm text-gray-400">
+                    <Zap className="w-4 h-4 text-[#3DDC84] shrink-0 mt-0.5" />
+                    <span>Soporte multi-idioma nativo (ES, EN, PT).</span>
+                  </li>
+                </ul>
+
+                <a 
+                  href="#"
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    alert("Enlace de descarga en desarrollo."); 
+                  }}
+                  className="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-[#3DDC84]/10 text-white font-bold uppercase tracking-widest text-xs py-3 rounded-lg transition-colors border border-white/20 hover:border-[#3DDC84]/50"
+                >
+                  Descargar APK
+                </a>
+              </div>
+            </div>
+
+            {/* Windows App Card */}
+            <div className="bg-brand-cyan/5 border border-brand-cyan/20 p-8 rounded-2xl relative overflow-hidden group hover:bg-brand-cyan/10 transition-all duration-500">
+              <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-32 h-32 text-brand-cyan">
+                  <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
+                </svg>
+              </div>
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-brand-cyan/10 rounded-full flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-brand-cyan">
+                      <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-serif text-white">Micro SaaS Windows</h3>
+                </div>
+                
+                <ul className="space-y-3 mb-8 flex-1">
+                  <li className="flex items-start gap-2 text-sm text-gray-400">
+                    <Zap className="w-4 h-4 text-brand-cyan shrink-0 mt-0.5" />
+                    <span>Aplicación de escritorio dedicada para máxima productividad.</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm text-gray-400">
+                    <Zap className="w-4 h-4 text-brand-cyan shrink-0 mt-0.5" />
+                    <span>Atajos de teclado globales y atajos de sistema.</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm text-gray-400">
+                    <Zap className="w-4 h-4 text-brand-cyan shrink-0 mt-0.5" />
+                    <span>Soporte multi-idioma nativo (ES, EN, PT).</span>
+                  </li>
+                </ul>
+
+                <a 
+                  href="#"
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    alert("Enlace de descarga en desarrollo."); 
+                  }}
+                  className="w-full flex items-center justify-center gap-2 bg-brand-cyan/20 hover:bg-brand-cyan text-white font-bold uppercase tracking-widest text-xs py-3 rounded-lg transition-colors border border-brand-cyan/50 hover:border-transparent"
+                >
+                  Descargar para Windows
+                </a>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {/* Paywall Modal */}
@@ -771,21 +881,24 @@ export default function AIGenerator() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-lg overflow-y-auto"
+            className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-lg"
           >
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="relative max-w-5xl w-full my-8 space-y-12"
-            >
-              <button 
-                onClick={() => setShowPaywall(false)}
-                className="absolute -top-12 right-0 md:-right-4 text-gray-400 hover:text-white flex items-center gap-2 transition-colors"
+            <div className="min-h-screen flex items-start justify-center p-4 py-8 sm:p-8">
+              <motion.div 
+                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                className="relative max-w-5xl w-full my-auto space-y-8 md:space-y-12 bg-[#050505] p-6 md:p-12 rounded-3xl border border-white/10 shadow-2xl"
               >
-                <span>Volver al resultado</span>
-                <X className="w-5 h-5" />
-              </button>
+                <div className="absolute top-4 right-4 md:top-6 md:right-6">
+                  <button 
+                    onClick={() => setShowPaywall(false)}
+                    className="p-2 bg-white/5 hover:bg-white/20 rounded-full text-gray-400 hover:text-white transition-colors"
+                    title="Cerrar"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
 
               <div className="text-center space-y-4">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand-gold/30 bg-brand-gold/10 text-brand-gold font-mono text-xs uppercase tracking-widest mb-4">
@@ -826,7 +939,7 @@ export default function AIGenerator() {
                   </ul>
 
                   <button 
-                    onClick={() => handleCheckout('price_esencial', 'payment', 500, 'Pack Esencial', '50 Generaciones Bio-Digitales')}
+                    onClick={() => handleCheckout('price_esencial', 'payment', 5, 'Pack Esencial', '50 Generaciones Bio-Digitales')}
                     disabled={isLoading}
                     className="w-full bg-transparent hover:bg-white/10 text-white font-bold uppercase tracking-widest text-xs py-4 rounded-lg flex items-center justify-center gap-2 transition-colors border border-white/20 disabled:opacity-50"
                   >
@@ -870,7 +983,7 @@ export default function AIGenerator() {
                   </ul>
 
                   <button 
-                    onClick={() => handleCheckout('price_pro', 'subscription', 1500, 'Cyber Organic PRO', 'Suscripción Mensual - 1000 Créditos IA')}
+                    onClick={() => handleCheckout('price_pro', 'subscription', 15, 'Cyber Organic PRO', 'Suscripción Mensual - 1000 Créditos IA')}
                     disabled={isLoading}
                     className="w-full bg-brand-gold hover:bg-white text-brand-dark font-bold uppercase tracking-widest text-xs py-4 rounded-lg flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(201,160,80,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] disabled:opacity-50"
                   >
@@ -882,9 +995,10 @@ export default function AIGenerator() {
 
               <div className="mt-8 text-center flex items-center justify-center gap-2 text-gray-400 text-xs font-mono opacity-80">
                 <Shield className="w-3 h-3" />
-                <span>Pagos internacionales procesados con encriptación de grado militar vía Stripe.</span>
+                <span>Pagos procesados de forma segura vía Mercado Pago para toda Latinoamérica.</span>
               </div>
             </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

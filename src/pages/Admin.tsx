@@ -4,6 +4,7 @@ import { auth, db } from '../firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { collection, getDocs, doc, updateDoc, deleteDoc, addDoc, getDoc } from 'firebase/firestore';
 import { Loader2, Trash2, Edit2, Plus, Users, Image as ImageIcon, Save, X } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface UserData {
   id: string;
@@ -108,19 +109,23 @@ export default function Admin() {
   };
 
   const handleUpdateUserLimit = async (userId: string) => {
+    const loadingToast = toast.loading('Actualizando límite...');
     try {
       await updateDoc(doc(db, 'users', userId), {
         maxDailyUsage: editMaxUsage
       });
       setUsers(users.map(u => u.id === userId ? { ...u, maxDailyUsage: editMaxUsage } : u));
       setEditingUserId(null);
+      toast.success('Límite de usuario actualizado', { id: loadingToast });
     } catch (error) {
       console.error("Error updating user:", error);
+      toast.error('Error al actualizar el límite', { id: loadingToast });
     }
   };
 
   const handleAddProject = async (e: React.FormEvent) => {
     e.preventDefault();
+    const loadingToast = toast.loading('Guardando proyecto...');
     try {
       const projectData = {
         ...newProject,
@@ -134,18 +139,23 @@ export default function Admin() {
       setNewProject({
         title: '', category: '', image: '', desc: '', alt: '', link: '', fullDesc: '', client: '', year: '', services: '', gallery: ''
       });
+      toast.success('Proyecto agregado exitosamente', { id: loadingToast });
     } catch (error) {
       console.error("Error adding project:", error);
+      toast.error('Error al guardar el proyecto', { id: loadingToast });
     }
   };
 
   const handleDeleteProject = async (projectId: string) => {
     if (!window.confirm("¿Estás seguro de que quieres eliminar este proyecto?")) return;
+    const loadingToast = toast.loading('Eliminando proyecto...');
     try {
       await deleteDoc(doc(db, 'projects', projectId));
       setProjects(projects.filter(p => p.id !== projectId));
+      toast.success('Proyecto eliminado exitosamente', { id: loadingToast });
     } catch (error) {
       console.error("Error deleting project:", error);
+      toast.error('Error al eliminar el proyecto', { id: loadingToast });
     }
   };
 

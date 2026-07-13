@@ -45,20 +45,20 @@ export const emailSequence: EmailTemplate[] = [
     `
   },
   {
-    subject: "Día 5: Marketing con Consciencia Orgánica",
+    subject: "Día 5: De la Idea al SaaS",
     body: `
-      <h1>Marketing que Siente</h1>
+      <h1>Desarrollo que Transforma</h1>
       <p>Llegamos a la mitad del desafío.</p>
-      <p>Hoy exploramos el marketing que no interrumpe, sino que atrae de forma natural, como la clorofila busca la luz.</p>
-      <p>Hablaremos de SEO semántico y contenido con valor real.</p>
+      <p>Hoy exploramos el salto del diseño web a la creación de APPs, Micro SaaS y plataformas complejas.</p>
+      <p>El verdadero valor reside en ofrecer software a medida que resuelva problemas reales de tus clientes, manteniendo la elegancia visual.</p>
     `
   },
   {
-    subject: "Día 6: Producción de Contenido Cinematográfico",
+    subject: "Día 6: La Revolución Serverless con Firebase Hosting",
     body: `
-      <h1>Tu Marca en Pantalla Grande</h1>
-      <p>La imagen lo es todo. Hoy nos enfocamos en el valor de la producción audiovisual de alta gama.</p>
-      <p>Un video de 15 segundos puede contar más que mil palabras si la estética es la correcta.</p>
+      <h1>Despliegues Veloces y Globales</h1>
+      <p>La infraestructura importa. Hoy nos enfocamos en las ventajas de Firebase Hosting frente al hospedaje tradicional.</p>
+      <p>No más caídas ni configuraciones lentas. Con Firebase, obtienes un CDN global y escalabilidad instantánea para que tu aplicación nunca se detenga.</p>
     `
   },
   {

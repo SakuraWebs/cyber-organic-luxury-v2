@@ -20,16 +20,18 @@ import CookieConsent from './components/CookieConsent';
 import Preloader from './components/Preloader';
 import { AnimatePresence, motion } from 'motion/react';
 
+
 import Admin from './pages/Admin';
+import { Toaster } from 'react-hot-toast';
 
 const routeMetadata: Record<string, { title: string; description: string }> = {
   '/': {
     title: 'CYBER ORGANIC AGENCY | Lujo Digital y Diseño Bio-Digital',
-    description: 'Agencia creativa especializada en diseño web de alta gama, producción de contenido cinematográfico y marketing digital estratégico con enfoque bio-digital.'
+    description: 'Agencia creativa especializada en desarrollo de APPs, Micro SaaS, SaaS y diseño web de alta gama con hospedaje en Firebase.'
   },
   '/servicios': {
     title: 'Servicios | CYBER ORGANIC AGENCY',
-    description: 'Descubre nuestros servicios de diseño bio-digital, desarrollo web premium, producción de contenido y estrategias de marketing de lujo.'
+    description: 'Descubre nuestros servicios de desarrollo de software, APPs, SaaS, diseño web premium y hospedaje avanzado en Firebase Hosting.'
   },
   '/nosotros': {
     title: 'Nosotros | CYBER ORGANIC AGENCY',
@@ -37,7 +39,7 @@ const routeMetadata: Record<string, { title: string; description: string }> = {
   },
   '/portafolio': {
     title: 'Portafolio | CYBER ORGANIC AGENCY',
-    description: 'Explora nuestra selección de proyectos destacados en diseño web, contenido y marketing digital para marcas premium.'
+    description: 'Explora nuestra selección de proyectos destacados en diseño web, SaaS y arquitectura cloud para marcas premium.'
   },
   '/living-data': {
     title: 'Living Data | CYBER ORGANIC AGENCY',
@@ -73,7 +75,7 @@ function DynamicMetadata() {
   
   const metadata = routeMetadata[pathname] || {
     title: isProjectDetail ? 'Proyecto | CYBER ORGANIC AGENCY' : 'CYBER ORGANIC AGENCY',
-    description: 'Agencia creativa especializada en diseño web de alta gama y enfoque bio-digital.'
+    description: 'Agencia creativa especializada en diseño web, SaaS y APPs de alta gama con enfoque bio-digital.'
   };
 
   return (
@@ -112,6 +114,17 @@ export default function App() {
 
   return (
     <ErrorBoundary>
+      <Toaster 
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: '#1A1A1A',
+            color: '#fff',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            fontFamily: 'sans-serif'
+          }
+        }}
+      />
       <Preloader show={loading} />
       <AnimatePresence mode="wait">
         {!loading && (
@@ -121,30 +134,32 @@ export default function App() {
             transition={{ duration: 1, ease: "easeOut" }}
             className="min-h-screen bg-brand-dark flex flex-col"
           >
-            <Router>
-              <DynamicMetadata />
-              <ScrollToTop />
-              <Navbar />
-              <main className="flex-grow">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/servicios" element={<Services />} />
-                  <Route path="/nosotros" element={<About />} />
-                  <Route path="/portafolio" element={<Portfolio />} />
-                  <Route path="/portafolio/:projectId" element={<ProjectDetail />} />
-                  <Route path="/living-data" element={<LivingData />} />
-                  <Route path="/ai-studio" element={<AIGenerator />} />
-                  <Route path="/admin" element={<Admin />} />
-                  <Route path="/contacto" element={<Contact />} />
-                  <Route path="/privacidad" element={<PrivacyPolicy />} />
-                  <Route path="/terminos" element={<TermsOfService />} />
-                </Routes>
-              </main>
-              <Chatbot />
-              <BackToTop />
-              <CookieConsent />
-              <Footer />
-            </Router>
+            
+              <Router>
+                <DynamicMetadata />
+                <ScrollToTop />
+                <Navbar />
+                <main className="flex-grow">
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/servicios" element={<Services />} />
+                    <Route path="/nosotros" element={<About />} />
+                    <Route path="/portafolio" element={<Portfolio />} />
+                    <Route path="/portafolio/:projectId" element={<ProjectDetail />} />
+                    <Route path="/living-data" element={<LivingData />} />
+                    <Route path="/ai-studio" element={<AIGenerator />} />
+                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/contacto" element={<Contact />} />
+                    <Route path="/privacidad" element={<PrivacyPolicy />} />
+                    <Route path="/terminos" element={<TermsOfService />} />
+                  </Routes>
+                </main>
+                <Chatbot />
+                <BackToTop />
+                <CookieConsent />
+                <Footer />
+              </Router>
+            
           </motion.div>
         )}
       </AnimatePresence>

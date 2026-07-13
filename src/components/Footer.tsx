@@ -1,25 +1,30 @@
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
+
+
 export default function Footer() {
+  
+
   return (
     <footer className="w-full py-20 px-12 border-t border-white/5 bg-brand-dark">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
         <div>
           <Logo className="mb-8" />
-          <p className="font-sans text-xs tracking-widest uppercase text-gray-400 leading-relaxed">
+          <p className="font-sans text-xs tracking-widest uppercase text-gray-400 leading-relaxed mb-6">
             Elevando la narrativa digital a través de la integración orgánica y la excelencia técnica.
           </p>
+          
         </div>
 
         <div className="flex flex-col gap-4">
           <h5 className="font-sans text-xs tracking-[0.3em] text-white uppercase mb-2">Contacto</h5>
-          <span className="font-serif italic text-sm text-brand-gold hover:text-brand-cyan transition-colors duration-700 cursor-pointer">
+          <a href="mailto:info@cyberorganicagency.com" className="font-serif italic text-sm text-brand-gold hover:text-brand-cyan transition-colors duration-700 cursor-pointer block">
             info@cyberorganicagency.com
-          </span>
-          <span className="font-serif italic text-sm text-brand-gold hover:text-brand-cyan transition-colors duration-700 cursor-pointer">
-            +598 95 467 979
-          </span>
+          </a>
+          <a href="https://wa.me/55559918125" target="_blank" rel="noopener noreferrer" className="font-serif italic text-sm text-brand-gold hover:text-brand-cyan transition-colors duration-700 cursor-pointer block">
+            +55 55 99181 25
+          </a>
         </div>
 
         <div className="flex flex-col gap-4">

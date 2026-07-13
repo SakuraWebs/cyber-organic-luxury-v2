@@ -4,26 +4,13 @@ import { Shield, Zap, Cpu, Palette, Globe, Instagram, Facebook, Github, Linkedin
 const About = () => {
   const founders = [
     {
-      name: "Florencia",
-      role: "Chief Design Officer & Sales Lead",
-      alias: "El Pulsar",
-      description: "Responsable de la estética Ciber-Orgánica, curaduría visual y estrategias de marketing digital. Dirige la producción de contenido y la gestión de redes sociales con un enfoque en el impacto emocional, la sofisticación estética y la conversión premium.",
-      image: "/florencia-perfil.webp?v=1",
-      accent: "cyan",
-      expertise: ["Ciber-Orgánica", "Visual Curation", "Social Media", "Content Production"],
-      socials: [
-        { icon: Instagram, url: "https://instagram.com/florci_garcia_", label: "Instagram" },
-        { icon: Facebook, url: "#", label: "Facebook" }
-      ]
-    },
-    {
       name: "Enrique",
-      role: "CTO & Solution Architect",
+      role: "Fundador & Solution Architect",
       alias: "El Motor",
-      description: "Especialista en arquitectura sobre Google Cloud Platform con enfoque en estándares de certificación ACE. Experto en performance extrema (Core Web Vitals), ciberseguridad e implementación de arquitecturas escalables con Python y Vertex AI.",
+      description: "Especialista en arquitectura sobre Google Cloud Platform (GCP) con enfoque en estándares de certificación ACE. Experto en performance extrema (Core Web Vitals), ciberseguridad e implementación de arquitecturas escalables y automatizadas con Python, Firebase y Vertex AI. Lidera el desarrollo de infraestructuras robustas e inteligentes a medida para empresas en Brasil, Uruguay, Argentina y Chile.",
       image: "/enrique-perfil.webp?v=1",
       accent: "bronze",
-      expertise: ["GCP Architecture", "Cybersecurity", "Vertex AI"],
+      expertise: ["GCP Architecture", "Cybersecurity", "Vertex AI", "Python & Firebase", "Cloud & Web Dev"],
       socials: [
         { icon: Github, url: "https://github.com/SakuraWebs", label: "GitHub" },
         { icon: Linkedin, url: "https://www.linkedin.com/in/enrique-fernández-3275463a6", label: "LinkedIn" }
@@ -59,7 +46,7 @@ const About = () => {
         </section>
 
         {/* Founders Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+        <div className="flex justify-center max-w-4xl mx-auto">
           {founders.map((founder, index) => (
             <motion.div
               key={founder.name}
@@ -156,6 +143,84 @@ const About = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* SakuraWebs Presentation Section */}
+        <section className="mt-32 max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="group relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl overflow-hidden p-8 md:p-12 hover:bg-white/10 hover:border-[#ffb7c5]/30 transition-all duration-500"
+          >
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#ffb7c5]/5 blur-[100px] rounded-full pointer-events-none" />
+            
+            <div className="flex flex-col md:flex-row gap-12 items-center md:items-start relative z-10">
+              <div className="w-full md:w-1/3 flex flex-col items-center">
+                <img 
+                  src="/sakura-neon.webp" 
+                  alt="SakuraWebs Logo" 
+                  className="w-48 h-48 object-contain drop-shadow-[0_0_15px_rgba(255,183,197,0.4)]"
+                />
+                <h2 className="text-3xl font-serif text-white mt-6 mb-2">SakuraWebs</h2>
+                <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#ffb7c5] text-center">
+                  Vitrine Tecnológica Premium
+                </div>
+              </div>
+              
+              <div className="w-full md:w-2/3">
+                <p className="text-sm text-gray-300 leading-relaxed font-sans mb-8">
+                  O projeto <strong>SakuraWebs</strong> é uma vitrine tecnológica premium e um ecossistema digital corporativo focado em soluções de infraestrutura em nuvem de alta performance e Inteligência Artificial (IA). Ele foi projetado para atuar como o portfólio oficial da agência homônima e, ao mesmo tempo, como um ambiente de testes e laboratório prático para a certificação Google Cloud Platform (GCP) Associate Cloud Engineer (ACE).
+                </p>
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-serif italic text-white mb-2 flex items-center gap-2">
+                      <Cpu className="w-4 h-4 text-brand-cyan" />
+                      1. Arquitetura e Stack Tecnológica de Elite
+                    </h3>
+                    <ul className="text-xs text-gray-400 space-y-2 font-sans pl-6 list-disc marker:text-brand-cyan/50">
+                      <li><strong>Backend Moderno:</strong> Desenvolvido nativamente em Python (com FastAPI ou Flask).</li>
+                      <li><strong>Hospedagem e Deploy:</strong> Totalmente conteinerizado com Docker, operando via Google Cloud Run e Firebase.</li>
+                      <li><strong>Observabilidade e IAM:</strong> Controle rígido de segurança via Service Accounts do GCP e Cloud Logging.</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-serif italic text-white mb-2 flex items-center gap-2">
+                      <Palette className="w-4 h-4 text-[#ffb7c5]" />
+                      2. Identidade Visual "Cyber-Organic" Premium
+                    </h3>
+                    <ul className="text-xs text-gray-400 space-y-2 font-sans pl-6 list-disc marker:text-[#ffb7c5]/50">
+                      <li><strong>Conceito Visual:</strong> Fusão entre minimalismo japonês e robustez de Cloud Computing.</li>
+                      <li><strong>Interface Imersiva:</strong> Layout em Bento Grid, Mobile-First.</li>
+                      <li><strong>Acabamento Estético:</strong> Mesh Gradients, Glassmorphism e elementos em SVG animado.</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-serif italic text-white mb-2 flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-brand-gold" />
+                      3. Ecossistema Cognitivo Integrado (IA)
+                    </h3>
+                    <ul className="text-xs text-gray-400 space-y-2 font-sans pl-6 list-disc marker:text-brand-gold/50">
+                      <li><strong>Vertex AI Agent Builder:</strong> Agente cognitivo nativo em fluxo híbrido.</li>
+                      <li><strong>Fluxo Híbrido:</strong> Robôs (Dialogflow CX) para captação de leads.</li>
+                      <li><strong>Busca Semântica (Grounding):</strong> Respostas técnicas via base de conhecimento estruturada.</li>
+                      <li><strong>Nano Banana Zone:</strong> Design inteligente que reserva 120px para o widget de chat.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-8 p-4 bg-white/5 border border-white/10 rounded-lg">
+                  <p className="text-xs text-[#ffb7c5]/90 leading-relaxed italic">
+                    "Em resumo, o SakuraWebs é uma plataforma que une a sofisticação visual de alto impacto à engenharia de nuvem avançada, servindo como o cartão de visitas definitivo para atrair clientes corporativos exigentes."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </section>
 
         {/* Core Values / Expertise Section */}
         <section className="mt-48">

@@ -23,8 +23,9 @@ try {
 let transporter: nodemailer.Transporter | null = null;
 function getTransporter() {
   if (!transporter) {
-    const user = process.env.ZOHO_USER_CyberOrganic || process.env.ZOHO_USER || "info@cyberorganicagency.com";
-    const pass = process.env.ZOHO_PASS;
+    const user = "info@cyberorganicagency.com";
+    // Check multiple environment variables because user mixed them up
+    const pass = process.env.ZOHO_PASS || process.env.ZOHO_USER_CyberOrganic || process.env.ZOHO_USER;
     if (!pass) {
       console.warn("ZOHO_PASS is missing. Email sending will fail.");
     }
@@ -45,7 +46,7 @@ async function sendSequenceEmail(email: string, name: string, dayIndex: number) 
   const template = emailSequence[dayIndex];
   if (!template) return;
 
-  const senderEmail = process.env.ZOHO_USER_CyberOrganic || process.env.ZOHO_USER || "info@cyberorganicagency.com";
+  const senderEmail = "info@cyberorganicagency.com";
   const mailOptions = {
     from: `"Cyber Organic Agency" <${senderEmail}>`,
     to: email,
@@ -63,16 +64,16 @@ async function sendSequenceEmail(email: string, name: string, dayIndex: number) 
   }
 }
 
-let stripeClient: Stripe | null = null;
-function getStripe() {
-  if (!stripeClient) {
-    const key = process.env.STRIPE_SECRET_KEY;
-    if (!key) throw new Error("STRIPE_SECRET_KEY is missing");
-    // @ts-ignore
-    stripeClient = new Stripe(key, { apiVersion: "2026-03-25.dahlia" });
+
+let mpClient: MercadoPagoConfig | null = null;
+export function getMercadoPago() {
+  if (!mpClient) {
+    const token = process.env.MP_ACCESS_TOKEN || "APP_USR-TEST-TOKEN"; // Fallback for dev
+    mpClient = new MercadoPagoConfig({ accessToken: token });
   }
-  return stripeClient;
+  return mpClient;
 }
+
 
 async function startServer() {
   const app = express();
@@ -113,7 +114,33 @@ async function startServer() {
 
       if (leadDoc.exists()) {
         console.log("Lead already exists:", email);
-        return res.status(200).json({ message: "Ya estás suscrito al desafío." });
+        
+        // Resend confirmation email for testing purposes
+        console.log("Resending confirmation email to existing lead...");
+        const transporter = getTransporter();
+        const senderEmail = "info@cyberorganicagency.com";
+        try {
+          await transporter.sendMail({
+            from: `"Cyber Organic Agency" <${senderEmail}>`,
+            to: email,
+            subject: "✓ Inscripción Confirmada - Desafío de 9 Días (Re-enviado)",
+            html: `
+              <div style="font-family: 'Space Grotesk', Arial, sans-serif; max-width: 600px; padding: 30px; border: 1px solid #eeeeee; background-color: #050505; color: #ffffff;">
+                <h2 style="color: #00dce5; text-transform: uppercase; letter-spacing: 0.1em;">Inscripción Confirmada</h2>
+                <p style="font-size: 16px; color: #e5e7eb;">Hola ${name},</p>
+                <p style="font-size: 16px; color: #e5e7eb; line-height: 1.6;">Vimos que intentaste inscribirte nuevamente. Tu lugar en el <strong>Desafío de 9 Días: Escala tu Presencia Bio-Digital</strong> ya estaba confirmado, ¡pero aquí tienes tu confirmación nuevamente!</p>
+                <p style="font-size: 16px; color: #e5e7eb; line-height: 1.6;">Asegúrate de revisar tu carpeta de "Promociones" o "Spam" si no has visto nuestros correos anteriores.</p>
+                <hr style="border: none; border-top: 1px solid #333333; margin: 30px 0;">
+                <p style="font-size: 14px; color: #a1a1aa;">Nos vemos en la cima,<br>El equipo de <span style="color: #00dce5;">CYBER ORGANIC</span></p>
+              </div>
+            `
+          });
+          console.log("Re-sent confirmation email.");
+        } catch (confirmError) {
+          console.error("Failed to re-send confirmation email:", confirmError);
+        }
+
+        return res.status(200).json({ message: "Ya estás suscrito al desafío. Te hemos reenviado la confirmación." });
       }
 
       // Save to Firestore
@@ -128,6 +155,36 @@ async function startServer() {
       });
       console.log("Lead saved successfully.");
 
+      // Send Confirmation Email
+      console.log("Sending confirmation email...");
+      const transporter = getTransporter();
+      const senderEmail = "info@cyberorganicagency.com";
+      
+      try {
+        await transporter.sendMail({
+          from: `"Cyber Organic Agency" <${senderEmail}>`,
+          to: email,
+          subject: "✓ Inscripción Confirmada - Desafío de 9 Días",
+          html: `
+            <div style="font-family: 'Space Grotesk', Arial, sans-serif; max-width: 600px; padding: 30px; border: 1px solid #eeeeee; background-color: #050505; color: #ffffff;">
+              <h2 style="color: #00dce5; text-transform: uppercase; letter-spacing: 0.1em;">Inscripción Confirmada</h2>
+              <p style="font-size: 16px; color: #e5e7eb;">Hola ${name},</p>
+              <p style="font-size: 16px; color: #e5e7eb; line-height: 1.6;">Tu lugar en el <strong>Desafío de 9 Días: Escala tu Presencia Bio-Digital</strong> está totalmente confirmado.</p>
+              <p style="font-size: 16px; color: #e5e7eb; line-height: 1.6;">Estamos muy emocionados de acompañarte en este proceso estratégico de transformación. A partir de hoy, recibirás contenido de alto valor diseñado para elevar la esencia de tu marca al nivel premium.</p>
+              <div style="background-color: #111111; padding: 15px; border-left: 4px solid #00dce5; margin: 25px 0;">
+                <p style="margin: 0; font-size: 14px; color: #a1a1aa;"><strong>Importante:</strong> Agrega esta dirección (${senderEmail}) a tus contactos y revisa tu carpeta de "Promociones" o "Spam" para asegurarte de recibir cada día del desafío sin interrupciones.</p>
+              </div>
+              <p style="font-size: 16px; color: #e5e7eb; line-height: 1.6;">En un instante recibirás el correo del <strong>Día 1</strong> con tu primera lección.</p>
+              <hr style="border: none; border-top: 1px solid #333333; margin: 30px 0;">
+              <p style="font-size: 14px; color: #a1a1aa;">Nos vemos en la cima,<br>El equipo de <span style="color: #00dce5;">CYBER ORGANIC</span></p>
+            </div>
+          `
+        });
+        console.log("Confirmation email sent.");
+      } catch (confirmError) {
+        console.error("Failed to send confirmation email, but continuing:", confirmError);
+      }
+
       // Send Day 1 Email immediately
       console.log("Sending initial email...");
       await sendSequenceEmail(email, name, 0);
@@ -139,6 +196,45 @@ async function startServer() {
       res.status(500).json({ 
         error: "Error en el servidor. Inténtalo de nuevo."
       });
+    }
+  });
+
+  // Contact Form Submission (sending to enrique.rfm@gmail.com)
+  app.post("/api/contact", async (req, res) => {
+    try {
+      const { name, email, phone, company, services, description, budget, deadline } = req.body;
+
+      const transporter = getTransporter();
+      const senderEmail = "info@cyberorganicagency.com";
+      const adminEmail = "enrique.rfm@gmail.com";
+
+      const mailOptions = {
+        from: `"Cyber Organic Agency" <${senderEmail}>`,
+        to: adminEmail,
+        replyTo: email,
+        subject: `NUEVO PROYECTO: ${name} - Cyber Organic`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px; border: 1px solid #eee;">
+            <h2 style="color: #00dce5; text-transform: uppercase;">Nueva Solicitud de Proyecto</h2>
+            <p><strong>De:</strong> ${name} &lt;${email}&gt;</p>
+            <p><strong>Teléfono:</strong> ${phone || 'N/A'}</p>
+            <p><strong>Empresa:</strong> ${company || 'N/A'}</p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+            <p><strong>Servicios de Interés:</strong> ${services.join(', ') || 'N/A'}</p>
+            <p><strong>Presupuesto Estimado:</strong> ${budget}</p>
+            <p><strong>Plazo Deseado:</strong> ${deadline}</p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+            <h3>Descripción del Proyecto:</h3>
+            <p style="white-space: pre-wrap;">${description}</p>
+          </div>
+        `
+      };
+
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ success: true, message: "Mensaje enviado." });
+    } catch (error: any) {
+      console.error("Contacto Error:", error);
+      res.status(500).json({ error: "Error interno al enviar el contacto.", details: error.message });
     }
   });
 
@@ -251,45 +347,50 @@ async function startServer() {
   app.use(express.json());
 
   // API Routes
-  app.post("/api/create-checkout-session", async (req, res) => {
+  app.post("/api/create-mercadopago-preference", async (req, res) => {
     try {
-      const stripe = getStripe();
-      const { priceId, mode, amount, name, description, userEmail, userId } = req.body;
+      const mp = getMercadoPago();
+      const preference = new Preference(mp);
+      const { priceId, mode, amount, name, description, userEmail, userId, currencyId } = req.body;
       const appUrl = process.env.APP_URL || "http://localhost:3000";
-
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        customer_email: userEmail,
-        client_reference_id: userId,
-        line_items: [
-          {
-            price_data: {
-              currency: "usd",
-              product_data: {
-                name: name,
-                description: description,
-              },
-              unit_amount: amount, // Amount in cents
-              ...(mode === "subscription" && { recurring: { interval: "month" } }),
-            },
-            quantity: 1,
+      
+      const result = await preference.create({
+        body: {
+          items: [
+            {
+              id: priceId,
+              title: name,
+              description: description,
+              quantity: 1,
+              unit_price: amount,
+              currency_id: currencyId || "BRL"
+            }
+          ],
+          payer: {
+            email: userEmail
           },
-        ],
-        mode: mode,
-        success_url: `${appUrl}/generador?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${appUrl}/generador?checkout=canceled`,
-        metadata: {
-          userId: userId,
-          plan: name
+          external_reference: userId,
+          metadata: {
+            userId: userId,
+            plan: name
+          },
+          back_urls: {
+            success: req.body.redirectUrl ? `${appUrl}${req.body.redirectUrl}?checkout=success` : `${appUrl}/ai-studio?checkout=success`,
+            pending: req.body.redirectUrl ? `${appUrl}${req.body.redirectUrl}?checkout=pending` : `${appUrl}/ai-studio?checkout=pending`,
+            failure: req.body.redirectUrl ? `${appUrl}${req.body.redirectUrl}?checkout=canceled` : `${appUrl}/ai-studio?checkout=canceled`
+          },
+          auto_return: "approved"
         }
       });
 
-      res.status(200).json({ sessionId: session.id, url: session.url });
+      res.status(200).json({ sessionId: result.id, url: result.init_point });
     } catch (e: any) {
-      console.error("Stripe Checkout Error:", e);
+      console.error("MercadoPago Checkout Error:", e);
       res.status(500).json({ error: e.message });
     }
   });
+
+      
 
   // Intercept all routes and inject OG tags
   app.get("*", async (req, res, next) => {
