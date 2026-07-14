@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Copy, Check, Loader2, Wand2, LogIn, LogOut, Crown, Zap, Shield, X } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
 import { auth, db } from '../firebase';
 import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
@@ -305,24 +304,24 @@ export default function AIGenerator() {
     setImageResult('');
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      
       if (generationMode === 'text') {
         const systemInstruction = `Eres un experto copywriter de lujo y estratega digital para la agencia Cyber Organic. Tu objetivo es crear contenido premium, sofisticado y altamente persuasivo. Mantén siempre una excelente ortografía y gramática en español.`;
         
         const userPrompt = `Genera un "${contentType}" con un tono "${tone}". \n\nBasado en la siguiente descripción o palabras clave: \n"${prompt}"\n\nEl contenido debe ser de alta calidad, listo para publicar, y reflejar la estética y valores solicitados. Si es para redes sociales, incluye hashtags relevantes. Si es un copy, asegúrate de que tenga un gancho atractivo y un llamado a la acción (CTA) sutil pero efectivo.`;
 
-        const response = await ai.models.generateContent({
-          model: "gemini-3-flash-preview",
-          contents: userPrompt,
-          config: {
-            systemInstruction: systemInstruction,
-            temperature: 0.7,
-          }
+        const res = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: userPrompt, systemInstruction })
         });
+        
+        if (!res.ok) throw new Error("Error de conexión con el servidor.");
+        const data = await res.json();
+        
+        if (data.error) throw new Error(data.error);
 
-        if (response.text) {
-          setResult(response.text);
+        if (data.text) {
+          setResult(data.text);
         } else {
           throw new Error("No se pudo generar el contenido.");
         }

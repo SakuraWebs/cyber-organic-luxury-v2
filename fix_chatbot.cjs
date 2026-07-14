@@ -1,4 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+const fs = require('fs');
+
+const content = `import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Terminal, X, Send, Cpu } from 'lucide-react';
 
@@ -22,7 +24,7 @@ export default function Chatbot() {
     { 
       id: '1', 
       sender: 'bot', 
-      text: 'Iniciando conexión segura...\nBienvenido a Cyber Organic. Soy tu Asistente Virtual. ¿En qué puedo asistirte hoy?' 
+      text: 'Iniciando conexión segura...\\nBienvenido a Cyber Organic. Soy tu Asistente Virtual. ¿En qué puedo asistirte hoy?' 
     }
   ]);
 
@@ -80,7 +82,7 @@ export default function Chatbot() {
           }
         ];
       } else if (currentCount === 3) {
-        botText += "\n\nHe notado su interés continuo. Para brindarle una experiencia de nivel premium, puedo transferir esta sesión directamente con nuestro fundador, Enrique Fernández.";
+        botText += "\\n\\nHe notado su interés continuo. Para brindarle una experiencia de nivel premium, puedo transferir esta sesión directamente con nuestro fundador, Enrique Fernández.";
         options = [
           { 
             label: "Conectar con Enrique (WhatsApp)", 
@@ -158,16 +160,16 @@ export default function Chatbot() {
                   key={msg.id}
                   initial={{ opacity: 0, x: msg.sender === 'user' ? 10 : -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={\`flex \${msg.sender === 'user' ? 'justify-end' : 'justify-start'}\`}
                 >
                   <div 
-                    className={`max-w-[85%] p-3 rounded-xl ${
+                    className={\`max-w-[85%] p-3 rounded-xl \${
                       msg.sender === 'user' 
                         ? 'bg-brand-cyan/10 border border-brand-cyan/20 text-white rounded-tr-sm' 
                         : 'bg-white/5 border border-white/10 text-gray-300 rounded-tl-sm'
-                    }`}
+                    }\`}
                   >
-                    <p className={`text-sm leading-relaxed whitespace-pre-wrap ${msg.sender === 'bot' ? 'font-mono text-xs' : 'font-sans'}`}>
+                    <p className={\`text-sm leading-relaxed whitespace-pre-wrap \${msg.sender === 'bot' ? 'font-mono text-xs' : 'font-sans'}\`}>
                       {msg.text}
                     </p>
                     
@@ -233,3 +235,6 @@ export default function Chatbot() {
     </>
   );
 }
+`;
+
+fs.writeFileSync('src/components/Chatbot.tsx', content);
