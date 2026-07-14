@@ -1,8 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config({ override: true });
 import express from "express";
 
 import { GoogleGenAI } from "@google/genai";
 import { createServer as createViteServer } from "vite";
-import fs from "fs/promises";
+import fs from "fs";
+import fsPromises from "fs/promises";
 import path from "path";
 import { projects } from "./src/data/projects.js";
 import Stripe from "stripe";
@@ -14,7 +17,7 @@ import { emailSequence } from "./src/data/emailSequence.js";
 // Initialize Firebase SDK for Server Environment (bypass admin SDK constraints)
 let clientDb: any = null;
 try {
-  const firebaseConfig = JSON.parse(await fs.readFile(path.join(process.cwd(), "firebase-applet-config.json"), "utf8"));
+  const firebaseConfig = JSON.parse(fs.readFileSync(path.join(process.cwd(), "firebase-applet-config.json"), "utf8"));
   const clientApp = initClientApp(firebaseConfig);
   clientDb = getClientFirestore(clientApp, firebaseConfig.firestoreDatabaseId);
   console.log("Firebase Client SDK initialized on server successfully.");
@@ -79,7 +82,7 @@ export function getMercadoPago() {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.DEFAULT_APP_PORT || process.env.PORT || 8080;
 
   let vite: any;
 
@@ -478,10 +481,10 @@ Misiones Clave:
     try {
       let template: string;
       if (process.env.NODE_ENV !== "production") {
-        template = await fs.readFile(path.join(process.cwd(), "index.html"), "utf-8");
+        template = await fsPromises.readFile(path.join(process.cwd(), "index.html"), "utf-8");
         template = await vite.transformIndexHtml(req.url, template);
       } else {
-        template = await fs.readFile(path.join(process.cwd(), "dist/index.html"), "utf-8");
+        template = await fsPromises.readFile(path.join(process.cwd(), "dist/index.html"), "utf-8");
       }
 
       const hostUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
