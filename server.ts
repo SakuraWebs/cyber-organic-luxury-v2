@@ -1,4 +1,5 @@
 import express from "express";
+
 import { GoogleGenAI } from "@google/genai";
 import { createServer as createViteServer } from "vite";
 import fs from "fs/promises";
@@ -88,6 +89,7 @@ async function startServer() {
       appType: "custom",
     });
     app.use(vite.middlewares);
+
   } else {
     app.use(express.static(path.join(process.cwd(), "dist"), { index: false }));
   }
@@ -351,7 +353,7 @@ async function startServer() {
   
   // AI Endpoints
   app.post("/api/chat", async (req, res) => {
-console.log("INSIDE API CHAT:", process.env.GEMINI_API_KEY);
+
     try {
       const { message, history } = req.body;
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
