@@ -359,7 +359,7 @@ async function startServer() {
 
     try {
       const { message, history } = req.body;
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = new GoogleGenAI({ apiKey: (process.env.MY_GEMINI_API_KEY || process.env.GEMINI_API_KEY) });
       const chat = ai.chats.create({
         model: "gemini-3-flash-preview",
         config: {
@@ -390,7 +390,7 @@ Misiones Clave:
   app.post("/api/generate", async (req, res) => {
     try {
       const { prompt, systemInstruction } = req.body;
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = new GoogleGenAI({ apiKey: (process.env.MY_GEMINI_API_KEY || process.env.GEMINI_API_KEY) });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: prompt,
@@ -409,7 +409,7 @@ Misiones Clave:
   app.post("/api/generate-image", async (req, res) => {
     try {
       const { prompt, aspectRatio } = req.body;
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = new GoogleGenAI({ apiKey: (process.env.MY_GEMINI_API_KEY || process.env.GEMINI_API_KEY) });
       const response = await ai.models.generateImages({
         model: 'imagen-4.0-generate-001',
         prompt: prompt,
