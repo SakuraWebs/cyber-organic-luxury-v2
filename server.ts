@@ -1,6 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config({ override: true });
 import express from "express";
+
+import { GoogleGenAI } from "@google/genai";
 import { createServer as createViteServer } from "vite";
-import fs from "fs/promises";
+import fs from "fs";
+import fsPromises from "fs/promises";
 import path from "path";
 import { projects } from "./src/data/projects.js";
 import Stripe from "stripe";
@@ -12,7 +17,7 @@ import { emailSequence } from "./src/data/emailSequence.js";
 // Initialize Firebase SDK for Server Environment (bypass admin SDK constraints)
 let clientDb: any = null;
 try {
-  const firebaseConfig = JSON.parse(await fs.readFile(path.join(process.cwd(), "firebase-applet-config.json"), "utf8"));
+  const firebaseConfig = JSON.parse(fs.readFileSync(path.join(process.cwd(), "firebase-applet-config.json"), "utf8"));
   const clientApp = initClientApp(firebaseConfig);
   clientDb = getClientFirestore(clientApp, firebaseConfig.firestoreDatabaseId);
   console.log("Firebase Client SDK initialized on server successfully.");
@@ -77,7 +82,7 @@ export function getMercadoPago() {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.DEFAULT_APP_PORT || process.env.PORT || 8080;
 
   let vite: any;
 
@@ -87,6 +92,7 @@ async function startServer() {
       appType: "custom",
     });
     app.use(vite.middlewares);
+
   } else {
     app.use(express.static(path.join(process.cwd(), "dist"), { index: false }));
   }
@@ -347,6 +353,84 @@ async function startServer() {
   app.use(express.json());
 
   // API Routes
+  
+  // AI Endpoints
+  app.post("/api/chat", async (req, res) => {
+
+    try {
+      const { message, history } = req.body;
+      const ai = new GoogleGenAI({ apiKey: (process.env.MY_GEMINI_API_KEY || process.env.GEMINI_API_KEY) });
+      const chat = ai.chats.create({
+        model: "gemini-3-flash-preview",
+        config: {
+          systemInstruction: `Eres el 'Asistente Virtual' de la agencia Cyber Organic, una agencia global y sin fronteras con base estratégica en Hispanoamérica. Tu tono es elegante, tecnológico, sofisticado, servicial y altamente persuasivo.
+
+La agencia ofrece diseño y desarrollo web de alta gama, creación de APPs, Micro SaaS y SaaS, arquitectura en Google Cloud y hospedaje especializado en Firebase Hosting a nivel internacional. Fundadores: Enrique. 
+
+Misiones Clave:
+1. IDIOMA / MULTILINGÜISMO (REGLA DE ORO): Detecta automáticamente el idioma en el que te escribe el usuario (español, inglés, portugués, etc.) y responde SIEMPRE en ese mismo idioma, manteniendo tu personalidad elegante y persuasiva.
+2. REPRESENTAR LA AGENCIA: Muestra gran orgullo por el trabajo de la agencia y su alcance mundial. (Proyectos destacados: ATALAYA 24, RANCHO BRANCO). NUNCA des números de teléfono ni enlaces de WhatsApp en tu texto.
+3. GUÍA EN 'AI STUDIO': Somos creadores del 'AI Studio', nuestro generador premium de contenido impulsado por IA. Debes saber guiar al usuario: explícales cómo elegir entre 'Texto' o 'Imagen', cómo ajustar el tono o la relación de aspecto, y cómo funciona la magia detrás de la herramienta.
+4. SUGERIR PROMPTS: Actúa como un Prompt Engineer experto. Sugiere prompts detallados, creativos y de alta conversión si el usuario no sabe qué generar.
+5. MEMES Y TEXTO EN IMÁGENES (MUY IMPORTANTE): Si un usuario quiere generar memes con texto escrito dentro de la imagen, debes guiarlo amablemente. Explícale que la IA es excelente generando la "escena graciosa o surrealista de fondo", pero aún no es perfecta pegando frases largas encima con precisión ortográfica. Sugiéreles el "Workflow Perfecto": "Crea la imagen cómica aquí, genera el chiste en modo texto, ¡y luego únelos en Instagram, TikTok o tu editor de teléfono!".
+6. VENDER PLANES PAGOS (UPSELLING): El AI Studio tiene un "Trial" limitado. Tu labor comercial es invitar a que contraten las opciones pagas: 
+- "Pack Booster" (Solo $5 USD): Entrega 50 generaciones que nunca caducan. 
+- "Suscripción PRO" ($15 USD /mes): Otorga 1000 generaciones mensuales. El arsenal definitivo para empresas y creadores.`,
+        },
+        history: history,
+      });
+      const response = await chat.sendMessage({ message });
+      res.json({ text: response.text });
+    } catch (error: any) {
+      console.error("Chat API Error:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/generate", async (req, res) => {
+    try {
+      const { prompt, systemInstruction } = req.body;
+      const ai = new GoogleGenAI({ apiKey: (process.env.MY_GEMINI_API_KEY || process.env.GEMINI_API_KEY) });
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt,
+        config: {
+          systemInstruction: systemInstruction,
+          temperature: 0.7,
+        }
+      });
+      res.json({ text: response.text });
+    } catch (error: any) {
+      console.error("Generate API Error:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/generate-image", async (req, res) => {
+    try {
+      const { prompt, aspectRatio } = req.body;
+      const ai = new GoogleGenAI({ apiKey: (process.env.MY_GEMINI_API_KEY || process.env.GEMINI_API_KEY) });
+      const response = await ai.models.generateImages({
+        model: 'imagen-4.0-generate-001',
+        prompt: prompt,
+        config: {
+          numberOfImages: 1,
+          outputMimeType: 'image/jpeg',
+          aspectRatio: aspectRatio,
+        }
+      });
+      if (response.generatedImages && response.generatedImages.length > 0) {
+        const base64EncodeString = response.generatedImages[0].image.imageBytes;
+        res.json({ imageResult: `data:image/jpeg;base64,${base64EncodeString}` });
+      } else {
+        throw new Error("No se pudo generar la imagen.");
+      }
+    } catch (error: any) {
+      console.error("Image Generate API Error:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   app.post("/api/create-mercadopago-preference", async (req, res) => {
     try {
       const mp = getMercadoPago();
@@ -397,10 +481,10 @@ async function startServer() {
     try {
       let template: string;
       if (process.env.NODE_ENV !== "production") {
-        template = await fs.readFile(path.join(process.cwd(), "index.html"), "utf-8");
+        template = await fsPromises.readFile(path.join(process.cwd(), "index.html"), "utf-8");
         template = await vite.transformIndexHtml(req.url, template);
       } else {
-        template = await fs.readFile(path.join(process.cwd(), "dist/index.html"), "utf-8");
+        template = await fsPromises.readFile(path.join(process.cwd(), "dist/index.html"), "utf-8");
       }
 
       const hostUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;

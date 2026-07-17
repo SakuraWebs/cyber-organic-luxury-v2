@@ -109,21 +109,21 @@ export default function Home() {
       {/* Bento Grid Portfolio */}
       <section className="px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* Main Featured Project: Atalaya 24 */}
+          {/* Main Featured Project: Rancho Branco */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -8 }}
-            onClick={() => window.location.href = '/portafolio/1'}
+            onClick={() => window.location.href = '/portafolio/2'}
             className="md:col-span-8 group relative overflow-hidden rounded-sm bg-brand-surface h-[600px] cursor-pointer"
           >
             <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-110">
               <img
-                alt="Diseño web y sistemas para Atalaya 24"
-                className="w-full h-full object-cover object-top opacity-60 mix-blend-luminosity grayscale group-hover:grayscale-0 transition-all duration-1000"
-                src="https://atalaya24.com/wp-content/uploads/2026/01/ELIAS.webp"
+                alt="Sitio inmersivo y bucólico para Rancho Branco"
+                className="w-full h-full object-cover opacity-60 mix-blend-luminosity grayscale group-hover:grayscale-0 transition-all duration-1000"
+                src="https://ranchobranco.com.br/1.1.jpeg"
                 loading="lazy"
                 decoding="async"
                 referrerPolicy="no-referrer"
@@ -138,13 +138,12 @@ export default function Home() {
                 className="flex items-center gap-3 mb-4"
               >
                 <span className="px-3 py-1 bg-white/10 text-white text-[10px] uppercase tracking-widest font-bold">
-                  Sistemas de IA & Web
+                  Diseño Web Inmersivo
                 </span>
               </motion.div>
-              <h2 className="font-serif text-5xl text-white mb-4">Atalaya 24</h2>
+              <h2 className="font-serif text-5xl text-white mb-4">Rancho Branco</h2>
               <p className="font-sans text-gray-400 max-w-md mb-8">
-                Arquitectura digital y biométrica de vanguardia enfocada en transmitir eficiencia y
-                liderazgo transfronterizo en seguridad interactiva.
+                Refugio hiper-local y entornos bucólicos en medios inmersivos. Conectando la sofisticación rústica con la innovación bio-digital.
               </p>
               <button className="flex items-center gap-4 text-brand-gold group/btn">
                 <span className="font-sans text-xs uppercase tracking-widest">Ver Proyecto</span>
@@ -199,21 +198,21 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Secondary Project: Rancho Branco */}
+          {/* Secondary Project: Atalaya 24 */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -8 }}
-            onClick={() => window.location.href = '/portafolio/2'}
+            onClick={() => window.location.href = '/portafolio/1'}
             className="md:col-span-4 group relative overflow-hidden rounded-sm bg-brand-surface h-[600px] cursor-pointer"
           >
             <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-110">
               <img
-                alt="Sitio inmersivo y bucólico para Rancho Branco"
-                className="w-full h-full object-cover opacity-60 mix-blend-luminosity grayscale group-hover:grayscale-0 transition-all duration-1000"
-                src="https://ranchobranco.com.br/1.1.jpeg"
+                alt="Diseño web y sistemas para Atalaya 24"
+                className="w-full h-full object-cover object-top opacity-60 mix-blend-luminosity grayscale group-hover:grayscale-0 transition-all duration-1000"
+                src="https://atalaya24.com/wp-content/uploads/2026/01/ELIAS.webp"
                 loading="lazy"
                 decoding="async"
                 referrerPolicy="no-referrer"
@@ -221,9 +220,9 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-dark to-transparent opacity-60"></div>
             </div>
             <div className="absolute inset-0 p-10 flex flex-col justify-end relative z-10">
-              <h3 className="font-serif text-3xl text-white mb-3">Rancho Branco</h3>
+              <h3 className="font-serif text-3xl text-white mb-3">Atalaya 24</h3>
               <p className="font-sans text-gray-400 text-xs uppercase tracking-widest leading-loose mb-6">
-                Refugio hiper-local y entornos bucólicos en medios inmersivos.
+                Sistemas de IA & Arquitectura digital.
               </p>
               <div className="h-1 w-0 bg-brand-gold group-hover:w-full transition-all duration-700"></div>
             </div>
