@@ -10,8 +10,8 @@
       {
         "source": "**",
         "run": {
-          "serviceId": "cyber-organic-agency",
-          "region": "us-west1"
+          "serviceId": "NOME-DO-SEU-SERVICO-CLOUD-RUN",
+          "region": "us-central1"
         }
       }
     ]

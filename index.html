@@ -7,6 +7,17 @@
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/og-image.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#3DDC84" />
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(err => {
+            console.log('SW registration failed:', err);
+          });
+        });
+      }
+    </script>
     
     <!-- Primary Meta Tags -->
     <title>CYBER ORGANIC AGENCY | Lujo Digital y Diseño Bio-Digital</title>
