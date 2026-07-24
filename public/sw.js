@@ -7,5 +7,11 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // basic fetch to satisfy PWA requirements
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return new Response('Offline mode: No connection available.', {
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    })
+  );
 });

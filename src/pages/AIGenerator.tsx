@@ -48,28 +48,41 @@ export default function AIGenerator() {
 
   // PWA Install State
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
+    // Verificar si el evento se disparó antes de montar React
+    if ((window as any).deferredPrompt) {
+      setDeferredPrompt((window as any).deferredPrompt);
+    }
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsStandalone(true);
+    }
+
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      (window as any).deferredPrompt = e;
     };
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
   }, []);
 
   const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
+    const promptEvent = deferredPrompt || (window as any).deferredPrompt;
+    if (promptEvent) {
+      promptEvent.prompt();
+      const { outcome } = await promptEvent.userChoice;
       if (outcome === 'accepted') {
         console.log('User accepted the install prompt');
       } else {
         console.log('User dismissed the install prompt');
       }
       setDeferredPrompt(null);
+      (window as any).deferredPrompt = null;
     } else {
-      alert("Para instalar la aplicación, abre el sitio en una pestaña nueva (fuera del iframe de vista previa) o usa la opción 'Instalar aplicación' en el menú principal de tu navegador.");
+      alert("Para instalar la aplicación, abre el menú principal de tu navegador (los 3 puntos en Chrome) y selecciona 'Instalar aplicación' o 'Añadir a la pantalla de inicio'.\n\nNota: El navegador puede ocultar el botón automático si ya está instalada.");
     }
   };
 
@@ -839,12 +852,21 @@ export default function AIGenerator() {
                   </li>
                 </ul>
 
-                <button 
-                  onClick={handleInstallClick}
-                  className="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-[#3DDC84]/10 text-white font-bold uppercase tracking-widest text-xs py-3 rounded-lg transition-colors border border-white/20 hover:border-[#3DDC84]/50"
-                >
-                  Instalar App (PWA)
-                </button>
+                {isStandalone ? (
+                  <button 
+                    disabled
+                    className="w-full flex items-center justify-center gap-2 bg-transparent text-gray-500 font-bold uppercase tracking-widest text-xs py-3 rounded-lg border border-white/10 opacity-50 cursor-not-allowed"
+                  >
+                    App Instalada
+                  </button>
+                ) : (
+                  <button 
+                    onClick={handleInstallClick}
+                    className="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-[#3DDC84]/10 text-white font-bold uppercase tracking-widest text-xs py-3 rounded-lg transition-colors border border-white/20 hover:border-[#3DDC84]/50"
+                  >
+                    Instalar App (PWA)
+                  </button>
+                )}
               </div>
             </div>
 
@@ -880,12 +902,21 @@ export default function AIGenerator() {
                   </li>
                 </ul>
 
-                <button 
-                  onClick={handleInstallClick}
-                  className="w-full flex items-center justify-center gap-2 bg-brand-cyan/20 hover:bg-brand-cyan text-white font-bold uppercase tracking-widest text-xs py-3 rounded-lg transition-colors border border-brand-cyan/50 hover:border-transparent"
-                >
-                  Instalar en Windows (PWA)
-                </button>
+                {isStandalone ? (
+                  <button 
+                    disabled
+                    className="w-full flex items-center justify-center gap-2 bg-brand-cyan/5 text-gray-500 font-bold uppercase tracking-widest text-xs py-3 rounded-lg border border-brand-cyan/20 opacity-50 cursor-not-allowed"
+                  >
+                    App Instalada
+                  </button>
+                ) : (
+                  <button 
+                    onClick={handleInstallClick}
+                    className="w-full flex items-center justify-center gap-2 bg-brand-cyan/20 hover:bg-brand-cyan text-white font-bold uppercase tracking-widest text-xs py-3 rounded-lg transition-colors border border-brand-cyan/50 hover:border-transparent"
+                  >
+                    Instalar en Windows (PWA)
+                  </button>
+                )}
               </div>
             </div>
           </div>
