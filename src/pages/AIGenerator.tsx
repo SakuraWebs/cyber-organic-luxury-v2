@@ -813,11 +813,8 @@ export default function AIGenerator() {
                 </ul>
 
                 <a 
-                  href="#"
-                  onClick={(e) => { 
-                    e.preventDefault(); 
-                    alert("Enlace de descarga en desarrollo."); 
-                  }}
+                  href="/downloads/cyber-organic-app.apk"
+                  download="CyberOrganic.apk"
                   className="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-[#3DDC84]/10 text-white font-bold uppercase tracking-widest text-xs py-3 rounded-lg transition-colors border border-white/20 hover:border-[#3DDC84]/50"
                 >
                   Descargar APK
@@ -858,11 +855,8 @@ export default function AIGenerator() {
                 </ul>
 
                 <a 
-                  href="#"
-                  onClick={(e) => { 
-                    e.preventDefault(); 
-                    alert("Enlace de descarga en desarrollo."); 
-                  }}
+                  href="/downloads/cyber-organic-app.exe"
+                  download="CyberOrganic.exe"
                   className="w-full flex items-center justify-center gap-2 bg-brand-cyan/20 hover:bg-brand-cyan text-white font-bold uppercase tracking-widest text-xs py-3 rounded-lg transition-colors border border-brand-cyan/50 hover:border-transparent"
                 >
                   Descargar para Windows
