@@ -103,8 +103,12 @@ function ScrollToTop() {
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
+    if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone) {
+      setIsStandalone(true);
+    }
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2500); // Duration of the preloader animation
@@ -138,10 +142,10 @@ export default function App() {
               <Router>
                 <DynamicMetadata />
                 <ScrollToTop />
-                <Navbar />
+                {!isStandalone && <Navbar />}
                 <main className="flex-grow">
                   <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={isStandalone ? <AIGenerator /> : <Home />} />
                     <Route path="/servicios" element={<Services />} />
                     <Route path="/nosotros" element={<About />} />
                     <Route path="/portafolio" element={<Portfolio />} />
@@ -154,10 +158,10 @@ export default function App() {
                     <Route path="/terminos" element={<TermsOfService />} />
                   </Routes>
                 </main>
-                <Chatbot />
-                <BackToTop />
-                <CookieConsent />
-                <Footer />
+                {!isStandalone && <Chatbot />}
+                {!isStandalone && <BackToTop />}
+                {!isStandalone && <CookieConsent />}
+                {!isStandalone && <Footer />}
               </Router>
             
           </motion.div>
