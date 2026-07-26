@@ -1,7 +1,8 @@
 {
-  "name": "Cyber Organic",
-  "short_name": "Cyber Organic",
-  "start_url": ".",
+  "name": "AI Studio - Cyber Organic",
+  "short_name": "AI Studio",
+  "start_url": "/ai-studio",
+  "scope": "/ai-studio",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#3DDC84",
